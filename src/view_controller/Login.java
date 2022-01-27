@@ -20,7 +20,7 @@ import java.net.URL;
 
 /**
  * Login
- * This method display the login page
+ * This class displays the login page
  *
  * @author Hussein Coulibaly
  */
@@ -46,7 +46,7 @@ public class Login implements Initializable {
 
     /**
      * switchScreen
-     * loads new stage
+     * This method loads new stage
      * @param event Button Click
      * @param switchPath path to new stage
      * @throws IOException
@@ -64,7 +64,7 @@ public class Login implements Initializable {
 
     /**
      * pressLogonButton
-     * attempts logon
+     * This method set logon attempts
      *
      * @param event Button Click
      * @throws IOException
@@ -121,7 +121,7 @@ public class Login implements Initializable {
 
     /**
      * pressClearButton
-     * clears fields on page
+     * This method clears fields on page
      *
      * @param event Button Click
      * @throws IOException
@@ -147,7 +147,7 @@ public class Login implements Initializable {
 
     /**
      * initialize
-     * populates stage
+     * This method populates stage
      *
      * @param location Time zone/ location
      * @param resources resources

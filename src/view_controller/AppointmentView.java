@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 
 /**
  * appointmentView
- * This method allows for viewing appointments
+ * This class allows for viewing appointments
  * @author Hussein Coulibaly
  */
 public class AppointmentView implements Initializable {
@@ -84,7 +84,7 @@ public class AppointmentView implements Initializable {
 
     /**
      * switchScreen
-     * loads new stage
+     * This method loads new stage
      *
      * @param event button click
      * @param switchPath path of new stage
@@ -369,7 +369,7 @@ public class AppointmentView implements Initializable {
                 // if successful notify, if not show user error.
                 if (success) {
                     ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-                    Alert deletedAppt = new Alert(Alert.AlertType.CONFIRMATION, "Appointment deleted", clickOkay);
+                    Alert deletedAppt = new Alert(Alert.AlertType.CONFIRMATION, "Appointment " + selectedAppt.getAppointmentID() + ": " + selectedAppt.getType() + " deleted", clickOkay);
                     deletedAppt.showAndWait();
 
                 }

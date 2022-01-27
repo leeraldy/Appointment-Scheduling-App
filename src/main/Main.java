@@ -24,7 +24,7 @@ public class Main extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Appointment Manager");
+        primaryStage.setTitle("Appointment Scheduling");
         Parent root = FXMLLoader.load(getClass().getResource("/view_controller/Login.fxml"));
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

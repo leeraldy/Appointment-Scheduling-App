@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 
 /**
  * addCustomer
- * This method adds customers
+ * This class adds customers
  * @author Hussein Coulibaly
  */
 public class AddCustomer implements Initializable {
@@ -46,7 +46,7 @@ public class AddCustomer implements Initializable {
 
     /**
      * switchScreen
-     * Changes screen to new stage
+     * This method changes screen to new stage
      *
      * @param event button click
      * @param switchPath path to new stage
@@ -62,7 +62,7 @@ public class AddCustomer implements Initializable {
 
     /**
      * pressSaveButton
-     * validates input and saves to DB
+     * This method validates input and saves to DB
      *
      * @param event Button click
      * @throws SQLException
@@ -111,7 +111,7 @@ public class AddCustomer implements Initializable {
 
     /**
      * pressClearButton
-     * clears fields on page
+     * This method clears fields on page
      *
      * @param event Button Click
      */
@@ -127,7 +127,7 @@ public class AddCustomer implements Initializable {
 
     /**
      * pressBackButton
-     * goes back to previous stage
+     * This method allows to reverse back to previous stage/screen
      *
      * @param event Button Click
      * @throws IOException
@@ -140,7 +140,7 @@ public class AddCustomer implements Initializable {
 
     /**
      * initialize
-     * Loads page and sets/include items on it
+     * This method loads page and set/include items on it
      * Lambda expression - creates a listener for changes in a ComboBox
      *
      * @param url path of stage

@@ -62,7 +62,7 @@ public class AddAppointment implements Initializable {
 
     /**
      * switchScreen
-     * Loads different stage
+     * This method load different stage
      *
      * @param event Button click
      * @param switchPath path to new stage
@@ -78,7 +78,7 @@ public class AddAppointment implements Initializable {
 
     /**
      * pressSaveButton
-     * This class handles pressing save button, validate input and add data to the DB
+     * This method handles pressing save button, validate input and add data to the DB
      *
      * @param event Button Click
      * @throws SQLException
@@ -107,14 +107,14 @@ public class AddAppointment implements Initializable {
         ZonedDateTime zonedEndDateTime = null;
         ZonedDateTime zonedStartDateTime = null;
 
-        // take user selected Contact_Name and find the contact_ID FK so we can add to appointments table.
+        // These lines of code take user's selected Contact_Name and find the contact_ID FK to add appointments table.
         Integer contactID = ContactDB.findContactID(contactName);
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
 
-        // INPUT VALIDATION: catch parsing errors for start and enddatetime
+        // INPUT VALIDATION: catch parsing errors for start and end datetime
         try {
             startDateTime = LocalDateTime.of(apptDatePicker.getValue(),
                     LocalTime.parse(startTimeTextBox.getText(), formatter));
@@ -155,10 +155,10 @@ public class AddAppointment implements Initializable {
 
         // INPUT VALIDATION: set corresponding error for user
         if (!validBusinessHours) {
-            errorMessage += "Invalid Business Hours.(8am to 10pm EST)\n";
+            errorMessage += "You are not allowed to schedule an appointment out of business hours.(8am to 10pm EST)\n";
         }
         if (!validOverlap) {
-            errorMessage += "Invalid Customer Overlap. Cannot double book customers.\n";
+            errorMessage += "Invalid, Customer Overlap. You cannot double book customers.\n";
         }
 
         System.out.println(errorMessage); // TODO - logger
@@ -205,7 +205,7 @@ public class AddAppointment implements Initializable {
 
     /**
      * pressClearButton
-     * clears values from the page
+     * This method clears values from the page
      */
     public void pressClearButton() {
         titleTextBox.clear();
@@ -236,7 +236,7 @@ public class AddAppointment implements Initializable {
 
     /**
      * validateBusinessHours
-     * Makes sure appointment is scheduled during business hours
+     * This method makes sure appointment is scheduled during business hours
      *
      * @param startDateTime start appointment datetime
      * @param endDateTime end appointment datetime
@@ -273,7 +273,7 @@ public class AddAppointment implements Initializable {
 
     /**
      * validateCustomerOverlap
-     * ensures customer does not have overlapping appointments
+     * This method ensures customer does not have overlapping appointments
      *
      * @param inputCustomerID customer ID of new appointment
      * @param startDateTime start dateime of appointment
@@ -326,7 +326,7 @@ public class AddAppointment implements Initializable {
 
     /**
      * initialize
-     * initialize the stage and items on screen
+     * This class initialize the stage and items on screen
      *
      * This Lambda expression - disable users from picking dates in past or weekend without needing a whole new method.
      * @param location Stage path

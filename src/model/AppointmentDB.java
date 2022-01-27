@@ -403,7 +403,7 @@ public class AppointmentDB {
 
     /**
      * getAppointmentsIn15Mins
-     * Queries DB to find appointments for sign in user starting within 15 minutes.
+     * This method allow queries DB to find appointments for sign in user starting within 15 minutes.
      *
      * @return list of appointments for user that start in 15 mins.
      * @throws SQLException

@@ -18,7 +18,7 @@ public class CustomerDB {
 
     /**
      * updateCustomer
-     * takes input values and updates it in the DB
+     * This method takes input values and updates it in the DB
      *
      * @param division customer division
      * @param name customer name

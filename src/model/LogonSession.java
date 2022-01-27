@@ -9,7 +9,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 /**
- * Initiate LogonSession
+ * This class initiates LogonSession
  *
  * @author Hussein Coulibaly
  */

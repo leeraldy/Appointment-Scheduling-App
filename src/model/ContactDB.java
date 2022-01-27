@@ -19,7 +19,7 @@ public class ContactDB {
 
     /**
      * getMinutesScheduled
-     * Calculates sum of minutes for all appointments for a specific contact
+     * This method calculates sum of minutes for all appointments for a specific contact
      *
      * @param contactID ID of contact to find sum for
      * @return Total number of minutes scheduled
@@ -47,7 +47,7 @@ public class ContactDB {
 
     /**
      * getContactAppts
-     * This class get all appointments for a specific contact
+     * This method get all appointments for a specific contact
      *
      * @param contactID ID of contact to find appointments
      * @return List of appointments for contact
@@ -108,7 +108,7 @@ public class ContactDB {
 
     /**
      * findContactID
-     * pull the name of the contact and finds the ID for usage with other DB operations.
+     * This method pulls the name of the contact and finds the ID for usage with other DB operations.
      *
      * @param contactName name of contact we are searching ID for
      * @return Corresponding Contact ID
