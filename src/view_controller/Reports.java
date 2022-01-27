@@ -55,7 +55,7 @@ public class Reports implements Initializable {
 
     /**
      * pressBackButton
-     * navigates to previous stage
+     * This method navigates to previous stage
      *
      * @param event Button Click
      * @throws IOException
@@ -84,7 +84,7 @@ public class Reports implements Initializable {
 
     /**
      * pressMinsPerContact
-     * populates second report
+     * This method populates second report
      *
      * @param event Button Click
      * @throws SQLException
@@ -101,7 +101,7 @@ public class Reports implements Initializable {
 
     /**
      * pressContactSchedule
-     * populates 3rd report
+     * This method populates 3rd report
      *
      * @param event Button Click
      * @throws SQLException
@@ -128,7 +128,7 @@ public class Reports implements Initializable {
 
     /**
      * initialize
-     * populates stage
+     * This method populates stage
      *
      * @param location location / time zone
      * @param resources resources

@@ -1,7 +1,7 @@
 package model;
 
 /**
- * Contact object not initialize
+ * Contact object not initialized
  *
  * @author Hussein Couliibaly
  */

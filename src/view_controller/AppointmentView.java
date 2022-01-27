@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 
 /**
  * appointmentView
- * This method allows for viewing appointments
+ * This class allows for viewing appointments
  * @author Hussein Coulibaly
  */
 public class AppointmentView implements Initializable {
@@ -84,7 +84,7 @@ public class AppointmentView implements Initializable {
 
     /**
      * switchScreen
-     * loads new stage
+     * This method loads new stage
      *
      * @param event button click
      * @param switchPath path of new stage
