@@ -369,7 +369,7 @@ public class AppointmentView implements Initializable {
                 // if successful notify, if not show user error.
                 if (success) {
                     ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-                    Alert deletedAppt = new Alert(Alert.AlertType.CONFIRMATION, "Appointment " + selectedAppt.getAppointmentID() + ": " + selectedAppt.getType() + " deleted", clickOkay);
+                    Alert deletedAppt = new Alert(Alert.AlertType.CONFIRMATION, "Appointment " + selectedAppt.getAppointmentID() + ": " + selectedAppt.getType() + " deleted successfully!", clickOkay);
                     deletedAppt.showAndWait();
 
                 }

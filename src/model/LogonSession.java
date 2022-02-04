@@ -24,6 +24,8 @@ public class LogonSession {
      */
     public LogonSession() {}
 
+    private static final TimeZone gtmTimeZone = TimeZone.getTimeZone("GMT+0");
+
     /**
      * attemptLogon
      * Takes input username and password and checks them against DB to logon

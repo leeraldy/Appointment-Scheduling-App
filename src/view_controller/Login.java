@@ -1,6 +1,7 @@
 package view_controller;
 
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.*;
 import javafx.scene.*;
@@ -9,6 +10,7 @@ import model.Appointment;
 import model.LogonSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import javafx.fxml.Initializable;
@@ -84,10 +86,17 @@ public class Login implements Initializable {
 
 
             // Get appointments in 15 minutes and display notification if there is.
-            ObservableList<Appointment> upcomingAppts = model.AppointmentDB.getAppointmentsIn15Mins();
-
-            if (!upcomingAppts.isEmpty()) {
-                for (Appointment upcoming : upcomingAppts ) {
+//            ObservableList<Appointment> upcomingAppts = model.AppointmentDB.getAppointmentsIn15Mins();
+//
+            ObservableList<Appointment> upcomingAppts = FXCollections.observableArrayList();
+            for(Appointment a:model.AppointmentDB.getAllAppointments()) {
+                if(a.getStartDateTime().toLocalDateTime().isAfter(LocalDateTime.now()) && a.getStartDateTime().toLocalDateTime().isBefore(LocalDateTime.now().plusMinutes(15)))
+                {
+                    upcomingAppts.add(a);
+                }
+            }
+                if (!upcomingAppts.isEmpty()) {
+                for (Appointment upcoming : upcomingAppts) {
 
                     String message = "Upcoming appointmentID: " + upcoming.getAppointmentID() + " Start: " +
                             upcoming.getStartDateTime().toString();

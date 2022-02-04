@@ -408,7 +408,7 @@ public class AppointmentDB {
      * @return list of appointments for user that start in 15 mins.
      * @throws SQLException
      */
-    public static ObservableList<Appointment> getAppointmentsIn15Mins() throws SQLException{
+    public static ObservableList<Appointment> getAppointmentsIn15Mins() throws SQLException {
 
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
 
