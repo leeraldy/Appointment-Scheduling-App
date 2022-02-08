@@ -22,11 +22,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * customerView
- * This ensure the view of all the customers
+ * Handles the main customers screen
  * @author Hussein Coulibaly
  */
-public class CustomerView implements Initializable {
+public class CustomerScene implements Initializable {
     @FXML
     Button addButton;
     @FXML
@@ -53,8 +52,7 @@ public class CustomerView implements Initializable {
     TableColumn<Customer, String> phoneNumberColumn;
 
     /**
-     * switchScreen
-     * loads next stage
+     * Populates next screen
      *
      * @param event Button Click
      * @param switchPath Path to next stage
@@ -69,8 +67,8 @@ public class CustomerView implements Initializable {
     }
 
     /**
-     * populateCustomers
-     * populates customers on screen
+     *
+     * Redirects to Custmer scene
      *
      * @param inputList list of customers
      */
@@ -88,10 +86,9 @@ public class CustomerView implements Initializable {
     }
 
     /**
-     * pressAddButton
-     * switches screen to add customer
+     * Redirects screen to add customer in the Database
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws IOException
      */
     public void pressAddButton(ActionEvent event) throws IOException {
@@ -100,17 +97,13 @@ public class CustomerView implements Initializable {
     }
 
     /**
-     * pressEditButton
-     * passes object and loads next stage
-     *
-     * @param event Button Click
+     * @param event Button Press
      * @throws IOException
      * @throws SQLException
      */
     public void pressEditButton(ActionEvent event) throws IOException, SQLException {
 
         Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
-        // throw error if no selection
         if (selectedCustomer == null) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
             Alert alert = new Alert(Alert.AlertType.WARNING, "No selected Customer", clickOkay);
@@ -123,7 +116,6 @@ public class CustomerView implements Initializable {
         loader.setLocation(getClass().getResource("/view_controller/ModifyCustomer.fxml"));
         Parent parent = loader.load();
         Scene scene = new Scene(parent);
-        // get the controller and load our selected appointment into it
         ModifyCustomer controller = loader.getController();
         controller.initData(selectedCustomer);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -132,10 +124,8 @@ public class CustomerView implements Initializable {
     }
 
     /**
-     * pressDeleteButton
-     * deletes selected object from DB
-     *
-     * @param event Button Click
+     * Removes the selected object
+     * @param event Button Press
      * @throws IOException
      * @throws SQLException
      */
@@ -143,7 +133,6 @@ public class CustomerView implements Initializable {
 
         Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
 
-        // check that user selected an appointment in the table
         if (selectedCustomer == null) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
             Alert alert = new Alert(Alert.AlertType.WARNING, "No selected Customer", clickOkay);
@@ -151,21 +140,19 @@ public class CustomerView implements Initializable {
             return;
         }
         else {
-            // show alert and ensure user wants to delete
             ButtonType clickYes = ButtonType.YES;
             ButtonType clickNo = ButtonType.NO;
             Alert deleteAlert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete Customer: "
                     + selectedCustomer.getCustomerID() + " and all related appointments?", clickYes, clickNo);
             Optional<ButtonType> result = deleteAlert.showAndWait();
 
-            // if user confirms, delete appointment + related appointments due to FK contraints
+
             if (result.get() == ButtonType.YES) {
                 Boolean customerApptSuccess = AppointmentDB.deleteCustomersAppointments(selectedCustomer.getCustomerID());
 
                 Boolean customerSuccess = CustomerDB.deleteCustomer(selectedCustomer.getCustomerID());
 
 
-                // if successful notify, if not show user error.
                 if (customerSuccess && customerApptSuccess) {
                     ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
                     Alert deletedCustomer = new Alert(Alert.AlertType.CONFIRMATION,
@@ -182,7 +169,7 @@ public class CustomerView implements Initializable {
 
                 }
 
-                // Re-load appointments on screen
+                // Updates appointments on screen
                 try {
                     populateCustomers(CustomerDB.getAllCustomers());
                 }
@@ -198,22 +185,21 @@ public class CustomerView implements Initializable {
     }
 
     /**
-     * pressBackButton
-     * loads previous stage
+     * Returns previous scene
      *
      * @param event ButtonClick
      * @throws IOException
      */
     public void pressBackButton(ActionEvent event) throws IOException {
 
-        switchScreen(event, "/view_controller/AppointmentView.fxml");
+        switchScreen(event, "/view_controller/AppointmentScene.fxml");
 
     }
 
     /**
-     * initialize stage and objects on it
+     * Populates to the mainscreen
      *
-     * @param location user location / time zone
+     * @param location user location
      * @param resources resources
      */
     @Override

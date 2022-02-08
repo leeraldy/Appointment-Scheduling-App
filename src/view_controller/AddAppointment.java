@@ -1,6 +1,6 @@
 package view_controller;
 
-//import com.mysql.cj.result.LocalDateTimeValueFactory;
+
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +25,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 /**
- * This class controls the Add appointment Screen
+ * This class handles new appointment addition
  *
  * @author Hussein Coulibaly
  */
@@ -60,13 +60,9 @@ public class AddAppointment implements Initializable {
     @ FXML
     Button backButton;
 
-    /**
-     * switchScreen
-     * This method load different stage
-     *
-     * @param event Button click
-     * @param switchPath path to new stage
-     * @throws IOException
+    /*
+     * @param event Button Press
+     * @param switchPath path to new screen
      */
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(switchPath));
@@ -77,12 +73,7 @@ public class AddAppointment implements Initializable {
     }
 
     /**
-     * pressSaveButton
-     * This method handles pressing save button, validate input and add data to the DB
-     *
-     * @param event Button Click
-     * @throws SQLException
-     * @throws IOException
+     * Executes additional inputs in the database
      */
     public void pressSaveButton(ActionEvent event) throws SQLException, IOException {
 
@@ -107,14 +98,11 @@ public class AddAppointment implements Initializable {
         ZonedDateTime zonedEndDateTime = null;
         ZonedDateTime zonedStartDateTime = null;
 
-        // These lines of code take user's selected Contact_Name and find the contact_ID FK to add appointments table.
         Integer contactID = ContactDB.findContactID(contactName);
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-
-        // INPUT VALIDATION: catch parsing errors for start and end datetime
         try {
             startDateTime = LocalDateTime.of(apptDatePicker.getValue(),
                     LocalTime.parse(startTimeTextBox.getText(), formatter));
@@ -135,13 +123,13 @@ public class AddAppointment implements Initializable {
             errorMessage += "Invalid End time. Please ensure proper format HH:MM, including leading 0's.\n";
         }
 
-        // INPUT VALIDATION: Ensure all fields have been entered
+        // INPUT VALIDATION: Ensure all fields have been entered correctly
         if (title.isBlank() || description.isBlank() || location.isBlank() || contactName == null || type.isBlank() ||
                 customerID == null || userID == null || apptDate == null || endDateTime == null ||
                 startDateTime == null) {
 
             errorMessage += "Please ensure a value has been entered in all fields.\n";
-            // Throw error
+            // Throw error if found
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
             Alert invalidInput = new Alert(Alert.AlertType.WARNING, errorMessage, clickOkay);
             invalidInput.showAndWait();
@@ -149,11 +137,10 @@ public class AddAppointment implements Initializable {
 
         }
 
-        // INPUT VALIDATION: check that business hours are valid and there is no double booked customers.
+        // INPUT VALIDATION: validates business hours are valid.
         validBusinessHours = validateBusinessHours(startDateTime, endDateTime, apptDate);
         validOverlap = validateCustomerOverlap(customerID, startDateTime, endDateTime, apptDate);
 
-        // INPUT VALIDATION: set corresponding error for user
         if (!validBusinessHours) {
             errorMessage += "You are not allowed to schedule an appointment out of business hours.(8am to 10pm EST)\n";
         }
@@ -163,7 +150,6 @@ public class AddAppointment implements Initializable {
 
         System.out.println(errorMessage); // TODO - logger
 
-        // INPUT VALIDATION - if any requirements are false, show error and end method.
         if (!validOverlap || !validBusinessHours || !validEndDateTime || !validStartDateTime) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
             Alert invalidInput = new Alert(Alert.AlertType.WARNING, errorMessage, clickOkay);
@@ -172,8 +158,7 @@ public class AddAppointment implements Initializable {
 
         }
         else {
-            // if input is valid we insert into DB and display success and clear.
-            // prep start and endTime by turning them into a zonedDateTime so we can enter in the DB in UTC.
+            // Validates inputs and inserts into Database and shows success and clear.
             zonedStartDateTime = ZonedDateTime.of(startDateTime, LogonSession.getUserTimeZone());
             zonedEndDateTime = ZonedDateTime.of(endDateTime, LogonSession.getUserTimeZone());
             String loggedOnUserName = LogonSession.getLoggedOnUser().getUserName();
@@ -182,16 +167,16 @@ public class AddAppointment implements Initializable {
             zonedStartDateTime = zonedStartDateTime.withZoneSameInstant(ZoneOffset.UTC);
             zonedEndDateTime = zonedEndDateTime.withZoneSameInstant(ZoneOffset.UTC);
 
-            // Add appt to DB
+            // Add appointment to Database by completing all the fields
             Boolean success = AppointmentDB.addAppointment(title, description, location, type, zonedStartDateTime,
                     zonedEndDateTime, loggedOnUserName, loggedOnUserName, customerID, userID, contactID );
 
-            // notify user we successfully added to DB, or if there was an error.
+            // return message "successfully added" if found no errors
             if (success) {
                 ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment added successfully!", clickOkay);
                 alert.showAndWait();
-                switchScreen(event, "/view_controller/AppointmentView.fxml");
+                switchScreen(event, "/view_controller/AppointmentScene.fxml");
             }
             else {
                 ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
@@ -203,10 +188,6 @@ public class AddAppointment implements Initializable {
 
     }
 
-    /**
-     * pressClearButton
-     * This method clears values from the page
-     */
     public void pressClearButton() {
         titleTextBox.clear();
         descriptionTextBox.clear();
@@ -223,42 +204,38 @@ public class AddAppointment implements Initializable {
     }
 
     /**
-     * pressBackButton
-     * This class help to load previous stage
+     * Reverts back to previous scene
      *
-     * @param event button click
+     * @param event button press
      * @throws IOException
      */
     public void pressBackButton(ActionEvent event) throws IOException {
-        switchScreen(event, "/view_controller/AppointmentView.fxml");
+        switchScreen(event, "/view_controller/AppointmentScene.fxml");
 
     }
 
     /**
-     * validateBusinessHours
-     * This method makes sure appointment is scheduled during business hours
+     * Validates only appointments made within business hours
      *
      * @param startDateTime start appointment datetime
      * @param endDateTime end appointment datetime
      * @param apptDate appointment date
-     *
      * @return Boolean indicating valid input
      */
     public Boolean validateBusinessHours(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDate apptDate) {
         // (8am to 10pm EST, Not including weekends)
-        // Turn into zonedDateTimeObject, so we can evaluate whatever time was entered in user time zone against EST
+        // Outputs a timestamp based on user input entered.
 
         ZonedDateTime startZonedDateTime = ZonedDateTime.of(startDateTime, LogonSession.getUserTimeZone());
         ZonedDateTime endZonedDateTime = ZonedDateTime.of(endDateTime, LogonSession.getUserTimeZone());
 
-        ZonedDateTime startBusinessHours = ZonedDateTime.of(apptDate, LocalTime.of(8,0),
+        ZonedDateTime startBusinessHours = ZonedDateTime.of(apptDate, LocalTime.of(8,00),
                 ZoneId.of("America/New_York"));
-        ZonedDateTime endBusinessHours = ZonedDateTime.of(apptDate, LocalTime.of(22, 0),
+        ZonedDateTime endBusinessHours = ZonedDateTime.of(apptDate, LocalTime.of(22, 00),
                 ZoneId.of("America/New_York"));
 
-        // If startTime is before or after business hours
-        // If end time is before or after business hours
-        // if startTime is after endTime - these should cover all possible times entered and validate input.
+        // Validates all the business hours and entered time accordingly
+
         if (startZonedDateTime.isBefore(startBusinessHours) | startZonedDateTime.isAfter(endBusinessHours) |
                 endZonedDateTime.isBefore(startBusinessHours) | endZonedDateTime.isAfter(endBusinessHours) |
                 startZonedDateTime.isAfter(endZonedDateTime)) {
@@ -272,16 +249,14 @@ public class AddAppointment implements Initializable {
     }
 
     /**
-     * validateCustomerOverlap
-     * This method ensures customer does not have overlapping appointments
+     * Ensure no overlapping appointments are accepted
      *
-     * @param inputCustomerID customer ID of new appointment
-     * @param startDateTime start dateime of appointment
-     * @param endDateTime end datetime of appointment
-     * @param apptDate date of appointment
-     *
-     * @return Boolean indicating valid input
-     * @throws SQLException
+     * @param inputCustomerID appointment of customer ID
+     * @param startDateTime appointment start datetime
+     * @param endDateTime appointment end datetime
+     * @param apptDate appointment date
+
+     * @return Boolean indicating valid input inserted
      */
     public Boolean validateCustomerOverlap(Integer inputCustomerID, LocalDateTime startDateTime,
                                            LocalDateTime endDateTime, LocalDate apptDate) throws SQLException {
@@ -289,10 +264,8 @@ public class AddAppointment implements Initializable {
         // Get list of appointments that might have conflicts
         ObservableList<Appointment> possibleConflicts = AppointmentDB.getCustomerFilteredAppointments(apptDate,
                 inputCustomerID);
-        // for each possible conflict, evaluate:
-        // if conflictApptStart is before newApptstart and conflictApptEnd is after newApptStart(starts before ends after)
-        // if conflictApptStart is before newApptEnd & conflictApptStart after newApptStart (startime anywhere in appt)
-        // if endtime is before end and endtime is after start (endtime falls anywhere in appt)
+        // Removes any conflicting appointments with the existing one
+
         if (possibleConflicts.isEmpty()) {
             return true;
         }
@@ -302,15 +275,12 @@ public class AddAppointment implements Initializable {
                 LocalDateTime conflictStart = conflictAppt.getStartDateTime().toLocalDateTime();
                 LocalDateTime conflictEnd = conflictAppt.getEndDateTime().toLocalDateTime();
 
-                // Conflict starts before and Conflict ends any time after new appt ends - overlap
                 if( conflictStart.isBefore(startDateTime) & conflictEnd.isAfter(endDateTime)) {
                     return false;
                 }
-                // ConflictAppt start time falls anywhere in the new appt
                 if (conflictStart.isBefore(endDateTime) & conflictStart.isAfter(startDateTime)) {
                     return false;
                 }
-                // ConflictAppt end time falls anywhere in the new appt
                 if (conflictEnd.isBefore(endDateTime) & conflictEnd.isAfter(startDateTime)) {
                     return false;
                 }
@@ -325,18 +295,15 @@ public class AddAppointment implements Initializable {
     }
 
     /**
-     * initialize
-     * This class initialize the stage and items on screen
-     *
-     * This Lambda expression - disable users from picking dates in past or weekend without needing a whole new method.
-     * @param location Stage path
+     * This Lambda expression - All the past dates are bared to be selected
+     * @param location Scene path
      * @param resources resources
      */
     public void initialize(URL location, ResourceBundle resources) {
 
         timeZoneLabel.setText("Your Time Zone:" + LogonSession.getUserTimeZone());
 
-        //Lambda Expression - Disable users from picking dates in the past or weekend.
+        //Lambda Expression
 
         apptDatePicker.setDayCellFactory(picker -> new DateCell() {
             @Override

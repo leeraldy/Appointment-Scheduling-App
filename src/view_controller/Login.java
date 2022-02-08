@@ -21,8 +21,8 @@ import utility.Logger;
 import java.net.URL;
 
 /**
- * Login
- * This class displays the login page
+ *
+ * This class displays and handles the login
  *
  * @author Hussein Coulibaly
  */
@@ -47,11 +47,9 @@ public class Login implements Initializable {
     private Label zoneLabel;
 
     /**
-     * switchScreen
-     * This method loads new stage
-     * @param event Button Click
-     * @param switchPath path to new stage
-     * @throws IOException
+     * Sets a login screen
+     * @param event Button Press
+     * @param this pass routes path to new scene
      */
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
 
@@ -65,12 +63,10 @@ public class Login implements Initializable {
     }
 
     /**
-     * pressLogonButton
-     * This method set logon attempts
+     * Sets logins attempts
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws IOException
-     * @throws SQLException
      */
     public void pressLogonButton(ActionEvent event) throws IOException, SQLException {
         String userName = userTextBox.getText();
@@ -85,9 +81,6 @@ public class Login implements Initializable {
         if (logon) {
 
 
-            // Get appointments in 15 minutes and display notification if there is.
-//            ObservableList<Appointment> upcomingAppts = model.AppointmentDB.getAppointmentsIn15Mins();
-//
             ObservableList<Appointment> upcomingAppts = FXCollections.observableArrayList();
             for(Appointment a:model.AppointmentDB.getAllAppointments()) {
                 if(a.getStartDateTime().toLocalDateTime().isAfter(LocalDateTime.now()) && a.getStartDateTime().toLocalDateTime().isBefore(LocalDateTime.now().plusMinutes(15)))
@@ -107,14 +100,14 @@ public class Login implements Initializable {
                 }
 
             }
-            // If no appointments in 15 minutes, display notification that no upcoming appointments.
+            // Generate a notification no upcoming appointments if no appointments are found within 15 minutes.
             else {
                 ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
                 Alert invalidInput = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming Appointments", clickOkay);
                 invalidInput.showAndWait();
             }
 
-            switchScreen(event, "/view_controller/AppointmentView.fxml");
+            switchScreen(event, "/view_controller/AppointmentScene.fxml");
 
         }
         else {
@@ -129,10 +122,8 @@ public class Login implements Initializable {
     }
 
     /**
-     * pressClearButton
-     * This method clears fields on page
-     *
-     * @param event Button Click
+     * Clears any input when clicked
+     * @param event Button Pressed
      * @throws IOException
      */
     public void pressClearButton(ActionEvent event) throws IOException {
@@ -141,13 +132,7 @@ public class Login implements Initializable {
 
     }
 
-    /**
-     * pressExitButton
-     * closes Application
-     *
-     * @param event Button Click
-     * @throws IOException
-     */
+
     public void pressExitButton(ActionEvent event) throws IOException {
         LogonSession.logOff();
         System.exit(0);
@@ -155,10 +140,9 @@ public class Login implements Initializable {
     }
 
     /**
-     * initialize
-     * This method populates stage
+     * Returns to mainscreen
      *
-     * @param location Time zone/ location
+     * @param location Time zone
      * @param resources resources
      */
     @Override

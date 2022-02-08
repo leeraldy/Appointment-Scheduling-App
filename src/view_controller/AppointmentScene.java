@@ -26,11 +26,11 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * appointmentView
- * This class allows for viewing appointments
- * @author Hussein Coulibaly
+ * * @author Hussein Coulibaly
+ *
+ * Handles the main screen and other screens
  */
-public class AppointmentView implements Initializable {
+public class AppointmentScene implements Initializable {
     @FXML
     Button newAppointmentButton;
     @FXML
@@ -78,17 +78,15 @@ public class AppointmentView implements Initializable {
     @FXML
     Label selectedTimeLabel;
 
-    // Markers for date filtering.
+    // Set date filter.
     ZonedDateTime startRangeMarker;
     ZonedDateTime endRangeMarker;
 
     /**
-     * switchScreen
-     * This method loads new stage
+     * Loads new scene
      *
-     * @param event button click
-     * @param switchPath path of new stage
-     * @throws IOException
+     * @param event button press
+     * @param switchPath path of new scene
      */
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(switchPath));
@@ -99,8 +97,7 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * initToggleGroup
-     * creates new toggle group preventing multiple selections
+     * Generates new toggle group blocking multiple selections
      */
     public void initToggleGroup() {
 
@@ -113,13 +110,11 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * pressNoFilterButton
-     * loads all appointments on page
+     * Generates the list of all appointments on screen
      *
-     * @param event Button Click
+     * @param event Button Press
      */
     public void pressNoFilterButton(ActionEvent event) {
-        // only one selection at a time!
         monthFilterButton.setSelected(false);
         weekFilterButton.setSelected(false);
 
@@ -128,7 +123,7 @@ public class AppointmentView implements Initializable {
             allAppts = AppointmentDB.getAllAppointments();
         }
         catch (SQLException error){
-            // Sometimes the connection to DB breaks here.(not sure why) If it does, re-connnect and try again.
+            // Database reconnection if the network drops.
             error.printStackTrace();
             DBConnection.connectDB();
             try {
@@ -136,7 +131,7 @@ public class AppointmentView implements Initializable {
             } catch (SQLException anotherError) {
                 anotherError.printStackTrace();
                 ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-                Alert invalidInput = new Alert(Alert.AlertType.WARNING, "DB connection failed. please restart", clickOkay);
+                Alert invalidInput = new Alert(Alert.AlertType.WARNING, "DB connection failed. Please restart", clickOkay);
                 invalidInput.showAndWait();
                 return;
             }
@@ -150,14 +145,13 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * pressWeekFilterButton
-     * filters appts by week
+     * Generates a list of all appointments to by weekly
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws SQLException
      */
     public void pressWeekFilterButton(ActionEvent event) throws SQLException {
-        // Only one selection at a time!
+
         monthFilterButton.setSelected(false);
         noFilterButton.setSelected(false);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -170,14 +164,14 @@ public class AppointmentView implements Initializable {
         ZonedDateTime startRange = startRangeMarker.withZoneSameInstant(ZoneOffset.UTC);
         ZonedDateTime endRange = endRangeMarker.withZoneSameInstant(ZoneOffset.UTC);
 
-        // query DB for time frame
+        // Search in Database for time frame
         filteredAppts = AppointmentDB.getDateFilteredAppointments(startRange, endRange);
-        // populate
+        // Populate filtered appointments
         populateAppointments(filteredAppts);
-        // update label
+
         selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
                 LogonSession.getUserTimeZone());
-        // update filterRangeMarker to next week.
+
 
 
 
@@ -185,10 +179,9 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * pressMonthFilterButton
-     * filters appts by month
+     * Generates a list of all appointments to by month
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws SQLException
      */
     public void pressMonthFilterButton(ActionEvent event) throws SQLException {
@@ -205,9 +198,8 @@ public class AppointmentView implements Initializable {
         ZonedDateTime startRange = startRangeMarker.withZoneSameInstant(ZoneOffset.UTC);
         ZonedDateTime endRange = endRangeMarker.withZoneSameInstant(ZoneOffset.UTC);
 
-        // query DB for time frame
         filteredAppts = AppointmentDB.getDateFilteredAppointments(startRange, endRange);
-        // populate
+        // Populate filtered appointments
         populateAppointments(filteredAppts);
         // update label
         selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
@@ -218,8 +210,7 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * pressNextButton
-     * when filtering appointments moves the time block to next time block
+     * Generates a list of filtered appointments
      *
      * @param event Button Click
      * @throws SQLException
@@ -256,11 +247,10 @@ public class AppointmentView implements Initializable {
             ZonedDateTime startRange = startRangeMarker.plusMonths(1);
             ZonedDateTime endRange = endRangeMarker.plusMonths(1);
 
-            // update markers
             startRangeMarker = startRange;
             endRangeMarker = endRange;
 
-            // convert to UTC for the DB
+            // convert to time UTC for the Databae
             startRange = startRange.withZoneSameInstant(ZoneOffset.UTC);
             endRange = endRange.withZoneSameInstant(ZoneOffset.UTC);
 
@@ -268,7 +258,6 @@ public class AppointmentView implements Initializable {
 
             populateAppointments(filteredAppts);
 
-            // update label
             selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
                     LogonSession.getUserTimeZone());
 
@@ -277,10 +266,7 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * pressBackButton
-     * moves filtering time block back one unit
-     *
-     * @param event Button Click
+     * @param event Button Press
      * @throws SQLException
      */
     public void pressBackButton(ActionEvent event) throws SQLException {
@@ -294,11 +280,10 @@ public class AppointmentView implements Initializable {
             ZonedDateTime startRange = startRangeMarker.minusWeeks(1);
             ZonedDateTime endRange = endRangeMarker.minusWeeks(1);
 
-            // update markers
             startRangeMarker = startRange;
             endRangeMarker = endRange;
 
-            // convert to UTC for the DB
+            // convert time to UTC
             startRange = startRange.withZoneSameInstant(ZoneOffset.UTC);
             endRange = endRange.withZoneSameInstant(ZoneOffset.UTC);
 
@@ -306,7 +291,6 @@ public class AppointmentView implements Initializable {
 
             populateAppointments(filteredAppts);
 
-            // update label
             selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
                     LogonSession.getUserTimeZone());
 
@@ -316,11 +300,10 @@ public class AppointmentView implements Initializable {
             ZonedDateTime startRange = startRangeMarker.minusMonths(1);
             ZonedDateTime endRange = endRangeMarker.minusMonths(1);
 
-            // update markers
             startRangeMarker = startRange;
             endRangeMarker = endRange;
 
-            // convert to UTC for the DB
+            // convert to time UTC
             startRange = startRange.withZoneSameInstant(ZoneOffset.UTC);
             endRange = endRange.withZoneSameInstant(ZoneOffset.UTC);
 
@@ -328,7 +311,6 @@ public class AppointmentView implements Initializable {
 
             populateAppointments(filteredAppts);
 
-            // update label
             selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
                     LogonSession.getUserTimeZone());
         }
@@ -336,10 +318,9 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * pressDeleteButton
-     * deletes selected appts from DB and reloads appointments table
+     * Deletes existing appointment and returns appointments table
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws IOException
      * @throws SQLException
      */
@@ -347,7 +328,6 @@ public class AppointmentView implements Initializable {
 
         Appointment selectedAppt = appointmentTable.getSelectionModel().getSelectedItem();
 
-        // check that user selected an appointment in the table
         if (selectedAppt == null) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
             Alert invalidInput = new Alert(Alert.AlertType.WARNING, "No selected Appointment", clickOkay);
@@ -362,11 +342,10 @@ public class AppointmentView implements Initializable {
                     + selectedAppt.getAppointmentID() + " ?", clickYes, clickNo);
             Optional<ButtonType> result = deleteAlert.showAndWait();
 
-            // if user confirms, delete appointment
+            // Appointment deleted upon user confirmation
             if (result.get() == ButtonType.YES) {
                 Boolean success = AppointmentDB.deleteAppointment(selectedAppt.getAppointmentID());
 
-                // if successful notify, if not show user error.
                 if (success) {
                     ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
                     Alert deletedAppt = new Alert(Alert.AlertType.CONFIRMATION, "Appointment " + selectedAppt.getAppointmentID() + ": " + selectedAppt.getType() + " deleted successfully!", clickOkay);
@@ -374,14 +353,14 @@ public class AppointmentView implements Initializable {
 
                 }
                 else {
-                    //TODO - log error if it occurs
+
                     ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
                     Alert deleteAppt = new Alert(Alert.AlertType.WARNING, "Failed to delete Appointment", clickOkay);
                     deleteAppt.showAndWait();
 
                 }
 
-                // Re-load appointments on screen
+                // Return appointment screen
                 try {
                     populateAppointments(AppointmentDB.getAllAppointments());
                 }
@@ -398,8 +377,7 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * pressNewButton
-     * loads stage to add appointment
+     * Redirects add screen appointment
      *
      * @param event Button Click
      * @throws IOException
@@ -410,10 +388,9 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * pressLogoutButton
-     * logs user out
+     * Exits user out from the program
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws IOException
      */
     public void pressLogoutButton(ActionEvent event) throws IOException {
@@ -434,8 +411,7 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * pressEditButton
-     * passes object to next stage and loads stage
+     * Redirects to another screen
      *
      * @param event Button Click
      * @throws IOException
@@ -444,7 +420,7 @@ public class AppointmentView implements Initializable {
     public void pressEditButton(ActionEvent event) throws IOException, SQLException {
 
         Appointment selectedAppt = appointmentTable.getSelectionModel().getSelectedItem();
-        // throw error if no selection
+        // If no selection made, shows errors
         if (selectedAppt == null) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
             Alert invalidInput = new Alert(Alert.AlertType.WARNING, "No selected Appointment", clickOkay);
@@ -457,7 +433,7 @@ public class AppointmentView implements Initializable {
         loader.setLocation(getClass().getResource("/view_controller/ModifyAppointment.fxml"));
         Parent parent = loader.load();
         Scene scene = new Scene(parent);
-        // get the controller and load our selected appointment into it
+
         ModifyAppointment controller = loader.getController();
         controller.initData(selectedAppt);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -466,23 +442,21 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * pressCustomerButton
-     * loads customer stage
+     * Generates customer screen
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws IOException
      */
     public void pressCustomerButton(ActionEvent event) throws IOException {
 
-        switchScreen(event, "/view_controller/CustomerView.fxml");
+        switchScreen(event, "/view_controller/CustomerScene.fxml");
 
     }
 
     /**
-     * pressReportsPage
-     * loads reports page
+     * Generates reports screen
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws IOException
      */
     public void pressReportsPage(ActionEvent event) throws IOException {
@@ -491,12 +465,11 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * loads appointments on page
+     * Populates appointments on the screen
      *
      * @param inputList list of appointments
      */
     public void populateAppointments(ObservableList<Appointment> inputList) {
-        // Takes an observable list of appointments and populates them on screen.
 
         appointmentIdColumn.setCellValueFactory(new PropertyValueFactory<Appointment, Integer>("appointmentID"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("title"));
@@ -512,8 +485,7 @@ public class AppointmentView implements Initializable {
     }
 
     /**
-     * checkCanceled
-     * checks to see if any appointments have type cancelled
+     * Displays any cancelled appointmemt
      *
      * @param inputList list of all appointments
      */
@@ -532,8 +504,7 @@ public class AppointmentView implements Initializable {
 
 
     /**
-     * initialize
-     * Initializes stage and loads objects on screen
+     * Initializes mainscreen
      *
      * @param location location / time zone
      * @param resources resources
@@ -545,13 +516,13 @@ public class AppointmentView implements Initializable {
         noFilterButton.setSelected(true);
         initToggleGroup();
 
-        // populate table view, handle DB connection breakage by retry.
+
         ObservableList<Appointment> allAppts = null;
         try {
             allAppts = AppointmentDB.getAllAppointments();
         }
         catch (SQLException error){
-            // Sometimes the connection to DB breaks here.(not sure why) If it does, re-connnect and try again.
+            // Database reconnection if connection is lost
             error.printStackTrace();
             DBConnection.connectDB();
             try {

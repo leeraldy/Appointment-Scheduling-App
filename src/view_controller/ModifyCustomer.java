@@ -21,8 +21,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * ModifyCustomer
- * This method modifies customer
+ * Handles the modification of the current customer
  * @author Hussein Coulibaly
  */
 public class ModifyCustomer implements Initializable {
@@ -49,10 +48,9 @@ public class ModifyCustomer implements Initializable {
     Button backButton;
 
     /**
-     * initiate Data
-     * Takes object from previous stage and populates it on this stage
+     * Set initiates modify scene
      *
-     * @param selectedCustomer Customer object from previous stage
+     * @param selectedCustomer Customer object from previous scene
      * @throws SQLException
      */
     public void initData(Customer selectedCustomer) throws SQLException {
@@ -72,11 +70,10 @@ public class ModifyCustomer implements Initializable {
     }
 
     /**
-     * switchScreen
-     * loads new stage
+     * Populates new scene
      *
-     * @param event Button Click
-     * @param switchPath path to new stage
+     * @param event Button Press
+     * @param switchPath path to new scene
      * @throws IOException
      */
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
@@ -88,15 +85,14 @@ public class ModifyCustomer implements Initializable {
     }
 
     /**
-     * pressSaveButton
-     * validates input and inputs new object to DB
+     * Validates input and inputs
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws IOException
      * @throws SQLException
      */
     public void pressSaveButton(ActionEvent event) throws IOException, SQLException {
-        // INPUT VALIDATION - check for nulls
+        // INPUT VALIDATION
         String country = countryComboBox.getValue();
         String division = divisionComboBox.getValue();
         String name = nameTextBox.getText();
@@ -116,14 +112,14 @@ public class ModifyCustomer implements Initializable {
 
         }
 
-        // CustomerDB updateCustomer
+        // Updates customers in Database
         Boolean success = CustomerDB.updateCustomer(division, name, address, postalCode, phone, customerID);
 
         if (success) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment updated successfully!", clickOkay);
             alert.showAndWait();
-            switchScreen(event, "/view_controller/CustomerView.fxml");
+            switchScreen(event, "/view_controller/CustomerScene.fxml");
         }
         else {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
@@ -133,10 +129,9 @@ public class ModifyCustomer implements Initializable {
     }
 
     /**
-     * pressClearButton
      * clears fields on screen
      *
-     * @param event Button Click
+     * @param event Button Press
      */
     public void pressClearButton(ActionEvent event) {
         countryComboBox.getSelectionModel().clearSelection();
@@ -148,27 +143,24 @@ public class ModifyCustomer implements Initializable {
     }
 
     /**
-     * pressBackButton
-     * navigates to previous stage
+     * Returns to previous scene
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws IOException
      */
     public void pressBackButton(ActionEvent event) throws IOException {
-        switchScreen(event, "/view_controller/CustomerView.fxml");
+        switchScreen(event, "/view_controller/CustomerScene.fxml");
     }
 
     /**
-     * initialize
-     * populates stage
+     * Populates scene
      *
-     * @param url stage path
+     * @param url scene path
      * @param resourceBundle resources
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        // Listener for combo box change
         countryComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null) {
                 divisionComboBox.getItems().clear();

@@ -20,8 +20,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * Reports
- * This class ensure all the reports are recorded.
+ * Handles reports that are recorded
  * @author Hussein Coulibaly
  */
 public class Reports implements Initializable {
@@ -38,11 +37,10 @@ public class Reports implements Initializable {
     Button backButton;
 
     /**
-     * switchScreen
-     * loads new stage
+     * Initiates new scene
      *
-     * @param event Button Click
-     * @param switchPath path to new stage
+     * @param event Button Press
+     * @param switchPath path to new scene
      * @throws IOException
      */
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
@@ -54,22 +52,20 @@ public class Reports implements Initializable {
     }
 
     /**
-     * pressBackButton
-     * This method navigates to previous stage
+     * Sets screen to previous scene
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws IOException
      */
     public void pressBackButton(ActionEvent event) throws IOException {
-        switchScreen(event, "/view_controller/AppointmentView.fxml");
+        switchScreen(event, "/view_controller/AppointmentScene.fxml");
 
     }
 
     /**
-     * pressApptByReportButton
-     * populates first report
+     * Populates the first report
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws SQLException
      */
     public void pressApptByReportButton(ActionEvent event) throws SQLException {
@@ -83,10 +79,9 @@ public class Reports implements Initializable {
     }
 
     /**
-     * pressMinsPerContact
-     * This method populates second report
+     * Populates second report
      *
-     * @param event Button Click
+     * @param event Button Press
      * @throws SQLException
      */
     public void pressMinsPerContact(ActionEvent event ) throws SQLException {
@@ -100,8 +95,7 @@ public class Reports implements Initializable {
     }
 
     /**
-     * pressContactSchedule
-     * This method populates 3rd report
+     * Populates 3rd report
      *
      * @param event Button Click
      * @throws SQLException
@@ -127,10 +121,9 @@ public class Reports implements Initializable {
 
 
     /**
-     * initialize
-     * This method populates stage
+     * Populates screen
      *
-     * @param location location / time zone
+     * @param location location
      * @param resources resources
      */
     @Override

@@ -18,8 +18,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * addCustomer
- * This class adds customers
+ * This controller handles customers addition.
  * @author Hussein Coulibaly
  */
 public class AddCustomer implements Initializable {
@@ -45,10 +44,9 @@ public class AddCustomer implements Initializable {
     Button backButton;
 
     /**
-     * switchScreen
-     * This method changes screen to new stage
+     * Sets initial scene to add customers
      *
-     * @param event button click
+     * @param event button press
      * @param switchPath path to new stage
      * @throws IOException
      */
@@ -61,15 +59,14 @@ public class AddCustomer implements Initializable {
     }
 
     /**
-     * pressSaveButton
-     * This method validates input and saves to DB
+     * Validates inputs
      *
-     * @param event Button click
+     * @param event Button press
      * @throws SQLException
      * @throws IOException
      */
     public void pressSaveButton(ActionEvent event) throws SQLException, IOException {
-        // INPUT VALIDATION - check for nulls
+        // INPUT VALIDATION - if no nulls found
         String country = countryComboBox.getValue();
         String division = divisionComboBox.getValue();
         String name = customerNameTextBox.getText();
@@ -88,17 +85,17 @@ public class AddCustomer implements Initializable {
 
         }
 
-        // Add customer to DB
+        // Add new customer to Database
         Boolean success = CustomerDB.addCustomer(country, division, name, address, postalCode, phone,
                 CustomerDB.getSpecificDivisionID(division));
 
-        // notify user we successfully added to DB, or if there was an error.
+        // Generates successfully added message, there's error found.
         if (success) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Customer added successfully!", clickOkay);
             alert.showAndWait();
             pressClearButton(event);
-            switchScreen(event, "/view_controller/CustomerView.fxml");
+            switchScreen(event, "/view_controller/CustomerScene.fxml");
         }
         else {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
@@ -110,8 +107,7 @@ public class AddCustomer implements Initializable {
     }
 
     /**
-     * pressClearButton
-     * This method clears fields on page
+     * Removes fields on scene when clcked
      *
      * @param event Button Click
      */
@@ -126,25 +122,20 @@ public class AddCustomer implements Initializable {
     }
 
     /**
-     * pressBackButton
-     * This method allows to reverse back to previous stage/screen
-     *
+     * Return to previous screen
      * @param event Button Click
-     * @throws IOException
      */
     public void pressBackButton(ActionEvent event) throws IOException {
-        switchScreen(event, "/view_controller/CustomerView.fxml");
+        switchScreen(event, "/view_controller/CustomerScene.fxml");
 
     }
 
 
     /**
-     * initialize
-     * This method loads page and set/include items on it
      * Lambda expression - creates a listener for changes in a ComboBox
      *
-     * @param url path of stage
-     * @param resourceBundle resources
+     * @param url path of scene
+     * @param resourceBundle finds root object
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
