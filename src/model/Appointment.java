@@ -1,10 +1,9 @@
 package model;
 
 import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 
 /**
- * This Appointment class takes care of the appointments.
+ * Appointment Class: Handles Appointments Objects
  *
  * @author Hussein Coulibaly
  */
@@ -26,13 +25,13 @@ public class Appointment {
     private Integer contactID;
     private String contactName;
 
-    /** Set of all items of the appointment.
-     * Appointment constructor
+    /**
+     * Appointment constructor for adding appointments
      *
      * @param inputAppointmentID Holds appointment ID (Primary Key).
      * @param inputContactID Holds contact ID (Foreign Key).
      * @param inputContactName Holds Name of contact.
-     * @param inputCreateBy Holds Name of user who created the appointment in the DB.
+     * @param inputCreateBy Holds user's name who created the appointmen
      * @param inputCreateDate Holds Date appointment was created.
      * @param inputCustomerID Holds customer ID (Foreign Key).
      * @param inputDescription Holds appointment description.
@@ -45,6 +44,25 @@ public class Appointment {
      * @param inputType Holds Appointment Type
      * @param inputUserID Holds User ID(Foreign Key).
      *
+     */
+
+    /** Constructor to create list of the appointment /
+     *
+     * @param inputAppointmentID
+     * @param inputTitle
+     * @param inputDescription
+     * @param inputLocation
+     * @param inputType
+     * @param inputStartDateTime
+     * @param inputEndDateTime
+     * @param inputCreateDate
+     * @param inputCreateBy
+     * @param inputLastUpdateDateTime
+     * @param inputLastUpdateBy
+     * @param inputCustomerID
+     * @param inputUserID
+     * @param inputContactID
+     * @param inputContactName
      */
     public Appointment(Integer inputAppointmentID, String inputTitle, String inputDescription, String inputLocation,
                        String inputType, Timestamp inputStartDateTime, Timestamp inputEndDateTime,
@@ -70,123 +88,77 @@ public class Appointment {
 
     }
 
-    //
-    /**
-     * getter - Gets the appointment End property.
-     * @return ID of the appointment
-     */
+
     public Integer getAppointmentID() {
         return appointmentID;
     }
 
-    /**
-     * Getter - Title
-     * @return title of the appointment
-     */
+
     public String getTitle() {
         return title;
     }
 
-    /**
-     * Getter - Description
-     * @return description of appointment
-     */
+
     public String getDescription() {
         return description;
     }
 
-    /**
-     * Getter - Location
-     * @return location of appointment
-     */
+
     public String getLocation() {
         return location;
     }
 
-    /**
-     * Getter - Type
-     * @return type of the appointment
-     */
+
     public String getType() {
         return  type;
     }
 
-    /**
-     * Getter - Start Date time
-     * @return start datetime of appointment
-     */
+
     public Timestamp getStartDateTime() {
         return startDateTime;
     }
 
-    /**
-     * Getter - end date time
-     * @return end datetime of appointment
-     */
+
     public Timestamp getEndDateTime() {
         return endDateTime;
     }
 
-    /**
-     * Getter - create date time
-     * @return create date of appointment
-     */
+
     public Timestamp getCreateDate() {
         return createDate;
     }
 
-    /**
-     * Getter - created by
-     * @return who created appointment
-     */
+
     public String getCreateBy() {
         return createBy;
     }
 
-    /**
-     * Getter - last update date time
-     * @return last update of appointment
-     */
+
     public Timestamp getLastUpdateDateTime() {
         return lastUpdateDateTime;
     }
 
-    /**
-     * Getter - last updated by
-     * @return datetime of last update
-     */
+
     public String getLastUpdateBy() {
         return lastUpdateBy;
     }
 
-    /**
-     * getter - customer ID
-     * @return customer ID
-     */
+
     public Integer getCustomerID() {
         return customerID;
     }
 
-    /**
-     * Getter - user ID
-     * @return user ID
-     */
+
     public Integer getUserID() {
         return userID;
     }
 
-    /**
-     * Getter - contact ID
-     * @return contact ID
-     */
+
     public Integer getContactID() {
         return contactID;
     }
 
-    /**
-     * Getter - contact name
-     * @return name of contact
-     */
+
     public String getContactName() {
         return contactName;
     }

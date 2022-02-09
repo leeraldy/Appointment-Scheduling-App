@@ -8,17 +8,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * This class handles Users in DB
+ * UserDB Class: Handles all users in the Database
  *
  * @author Hussein Coulibaly
  */
 public class UserDB {
 
     /**
-     * getAllUserID
-     * get a list of all user ID's from the DB
+     * Retrieves user list ID's from the Database
      *
-     * @return List of all user ID's
+     * @return user ID's list
      * @throws SQLException
      */
     public static ObservableList<Integer> getAllUserID() throws SQLException {

@@ -121,7 +121,7 @@ public class Reports implements Initializable {
 
 
     /**
-     * Populates screen
+     * Populates main screen
      *
      * @param location location
      * @param resources resources

@@ -3,7 +3,7 @@ package model;
 import java.sql.Timestamp;
 
 /**
- * This class handles Customers in the application
+ * Customer Class: Handles Customer objects
  *
  * @author Hussein Coulibaly
  */
@@ -19,16 +19,16 @@ public class Customer {
     private String country;
 
     /**
-     * Constructor for Customer Object
+     * Constructor to create new Customer object
      *
-     * @param inputCustomerID ID of customer
-     * @param inputName name of customer
-     * @param inputAddress address of customer
-     * @param inputPostalCode postal code of customer
-     * @param inputPhoneNumber phone number of customer
-     * @param inputDivision division of customer
-     * @param inputDivID Division ID of customer
-     * @param inputCountry Country of customer
+     * @param inputCustomerID Customer ID
+     * @param inputName Customer name
+     * @param inputAddress Customer address
+     * @param inputPostalCode Customer postal code
+     * @param inputPhoneNumber Customer phone number
+     * @param inputDivision Customer first division
+     * @param inputDivID Customer Division
+     * @param inputCountry Customer Country
      */
     public Customer(Integer inputCustomerID, String inputName, String inputAddress, String inputPostalCode,
                     String inputPhoneNumber, String inputDivision, Integer inputDivID, String inputCountry) {
@@ -56,7 +56,7 @@ public class Customer {
 
     /**
      * Getter - name
-     * @return name of customer
+     * @return Customer name
      */
     public String getName() {
         return name;
@@ -64,7 +64,7 @@ public class Customer {
 
     /**
      * Getter - Address
-     * @return address of customer
+     * @return Customer address
      */
     public String getAddress() {
         return address;
@@ -72,7 +72,7 @@ public class Customer {
 
     /**
      * Getter - postal code
-     * @return postal code of customer
+     * @return Customer postal code
      */
     public String getPostalCode() {
         return postalCode;
@@ -88,7 +88,7 @@ public class Customer {
 
     /**
      * Getter - Division
-     * @return customers division
+     * @return Customers division
      */
     public String getDivision() {
         return division;
@@ -96,7 +96,7 @@ public class Customer {
 
     /**
      * Getter - Country
-     * @return country of customer
+     * @return Customer Country
      */
     public String getCountry() {
         return country;
@@ -104,7 +104,7 @@ public class Customer {
 
     /**
      * Getter - Division ID
-     * @return division of customer
+     * @return Customer division
      */
     public Integer getDivisionID() {
         return divisionID;

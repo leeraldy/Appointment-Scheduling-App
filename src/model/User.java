@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * This class handles Users
+ * User Class: Handles user objects
  *
  * @author Hussein Coulibaly
  */
@@ -13,7 +13,7 @@ public class User {
     private Integer userID;
 
     /**
-     * User Constructor
+     * User Constructor to create users
      *
      * @param inputUserName username
      * @param inputUserId user ID

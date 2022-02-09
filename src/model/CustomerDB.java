@@ -10,23 +10,22 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * This class CustomerDB handles customers in the DB
+ * CustomerDB Class: Handles customers Objects in the Database
  *
  * @author Hussein Coulibaly
  */
 public class CustomerDB {
 
     /**
-     * updateCustomer
-     * This method takes input values and updates it in the DB
+     * Gets all customers inputs  from the database
      *
-     * @param division customer division
-     * @param name customer name
-     * @param address customer address
+     * @param division division of customer
+     * @param name name of customer
+     * @param address address of the customer
      * @param postalCode customer postal code
-     * @param phoneNum customer phone number
+     * @param phoneNum phone number of customer
      * @param customerID customer ID
-     * @return Boolean indicating operation successful
+     * @return returns Boolean displaying successful action
      * @throws SQLException
      */
     public static Boolean updateCustomer( String division, String name, String address,
@@ -47,7 +46,7 @@ public class CustomerDB {
         sqlCommand.setInt(7, CustomerDB.getSpecificDivisionID(division));
         sqlCommand.setInt(8, customerID);
 
-        // Execute query
+
         try {
             sqlCommand.executeUpdate();
             sqlCommand.close();
@@ -63,11 +62,10 @@ public class CustomerDB {
     }
 
     /**
-     * This class deleteCustomer deletes customers
-     * deletes customer from DB
+     * Deletes customer from DB
      *
-     * @param customerID customer ID to delete
-     * @return Boolean to indicate successful operation
+     * @param customerID delete customer ID to
+     * @return returns Boolean to display successful action
      * @throws SQLException
      */
     public static Boolean deleteCustomer(Integer customerID) throws SQLException {
@@ -89,18 +87,16 @@ public class CustomerDB {
     }
 
     /**
-     *
-     * This class addCustomer add customers
      * Add customer to the Database
      *
-     * @param country customer Country
-     * @param division customer Division
-     * @param name customer name
-     * @param address customer address
-     * @param postalCode customer postal code
-     * @param phoneNum customer phone number
-     * @param divisionID customer division ID
-     * @return Boolean to indicate successful operation
+     * @param country Country of customer
+     * @param division Division of customer
+     * @param name name of customer
+     * @param address address of customer
+     * @param postalCode postal code of customer
+     * @param phoneNum phone number of customer
+     * @param divisionID  division ID of customer
+     * @return retuns Boolean to display successful action
      * @throws SQLException
      */
     public static Boolean addCustomer(String country, String division, String name, String address, String postalCode,
@@ -123,7 +119,7 @@ public class CustomerDB {
         sqlCommand.setString(8, LogonSession.getLoggedOnUser().getUserName());
         sqlCommand.setInt(9, divisionID);
 
-        // Execute query
+
         try {
             sqlCommand.executeUpdate();
             sqlCommand.close();
@@ -139,11 +135,10 @@ public class CustomerDB {
     }
 
     /**
-     * getSpecificDivisionID
-     * takes a division string and finds the corresponding ID
+     * Executes queries and  and retrieves the corresponding ID
      *
-     * @param division division to find ID for
-     * @return ID of the division
+     * @param division ID for the division to be found
+     * @return Division ID
      * @throws SQLException
      */
     public static Integer getSpecificDivisionID(String division) throws SQLException {
@@ -165,10 +160,9 @@ public class CustomerDB {
     }
 
     /**
-     * getAllCustomerID
-     * gets all customer ID's to populate combo boxes
+     * Retrieves all customer ID's to generates combo boxes
      *
-     * @return List of customer ID's
+     * @return customer ID's List
      * @throws SQLException
      */
     public static ObservableList<Integer> getAllCustomerID() throws SQLException {
@@ -187,10 +181,10 @@ public class CustomerDB {
 
     /**
      * getFilteredDivisions
-     * takes the country and filters the matching first level divisions
+     * Gets the country and matches first level divisions
      *
-     * @param inputCountry input country to find the corresponding divisions
-     * @return list of corresponding first level divisions
+     * @param inputCountry the corresponding divisions to retrieve the input entered
+     * @return list of all corresponding first level divisions
      * @throws SQLException
      */
     public static ObservableList<String> getFilteredDivisions(String inputCountry) throws SQLException {
@@ -213,10 +207,9 @@ public class CustomerDB {
     }
 
     /**
-     * getAllCountries
-     * queries DB to get all countries
+     * Gets all queries from the Database to pull all countries
      *
-     * @return List of countries
+     * @return countries list
      * @throws SQLException
      */
     public static ObservableList<String> getAllCountries() throws SQLException {
@@ -234,10 +227,9 @@ public class CustomerDB {
     }
 
     /**
-     * getAllCustomers
-     * queries DB and gets all customers
+     * Gets from the Database all queries DB and pull all customers
      *
-     * @return list of all customers
+     * @return Customers list
      * @throws SQLException
      */
     public static ObservableList<Customer> getAllCustomers() throws SQLException {
@@ -251,7 +243,7 @@ public class CustomerDB {
 
 
         while( results.next() ) {
-            // get data from the returned rows
+
             Integer custID = results.getInt("Customer_ID");
             String custName = results.getString("Customer_Name");
             String custAddress = results.getString("Address");
@@ -261,12 +253,11 @@ public class CustomerDB {
             Integer divID = results.getInt("Division_ID");
             String custCountry = results.getString("Country");
 
-            // populate into an customer object
+
             Customer newCust = new Customer(custID, custName, custAddress, custPostalCode, custPhoneNum, custDivision,
                     divID, custCountry);
 
 
-            // Add to the observablelist
             allCustomers.add(newCust);
 
         }

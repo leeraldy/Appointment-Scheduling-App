@@ -9,7 +9,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 /**
- * This class initiates LogonSession
+ * LogonSession Class: Handles user Login session
  *
  * @author Hussein Coulibaly
  */
@@ -20,20 +20,19 @@ public class LogonSession {
     private static ZoneId userTimeZone;
 
     /**
-     * LogonSessionConstructor
+     * Constructor to initiate LogonSession
      */
     public LogonSession() {}
 
     private static final TimeZone gtmTimeZone = TimeZone.getTimeZone("GMT+0");
 
     /**
-     * attemptLogon
-     * Takes input username and password and checks them against DB to logon
+     * Login attempts by verifying the username and password
      *
      * @param userNameInput user input username
      * @param userPassword user input password
      *
-     * @return Boolean indicating a successful logon
+     * @return Boolean displaying a successful loin
      * @throws SQLException
      */
     public static boolean attemptLogon(String userNameInput, String userPassword) throws SQLException{
@@ -47,7 +46,6 @@ public class LogonSession {
         if (!result.next()) {
             sqlCommand.close();
             return false;
-            //Log failed login attempt
 
         }
         else {
@@ -62,34 +60,24 @@ public class LogonSession {
 
     }
 
-    /**
-     * Getter - user Object
-     * @return logged on user object
-     */
+
     public static User getLoggedOnUser() {
         return loggedOnUser;
     }
 
-    /**
-     * Getter - user Locale
-     * @return locale of logged on user
-     */
+
     public static Locale getUserLocale() {
         return userLocale;
 
     }
 
-    /**
-     * Getter - user Time Zone
-     * @return logged on user time zone
-     */
+
     public static ZoneId getUserTimeZone() {
         return userTimeZone;
     }
 
     /**
-     * logOff
-     * Logs off user
+     * Sign off user from the application
      */
     public static void logOff() {
         loggedOnUser = null;

@@ -12,19 +12,19 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * This class AppointmentDB handles all the database side of the appointment
+ * AppointmentDB Class: Handles all the SQL queries in Database
  *
  * @author Hussein Coulibaly
  */
 public class AppointmentDB {
 
     /**
-     * GetDateFilteredAppointments
-     * This retrieves queries DB for all appointments between a start and end range
+     * Gets all the appointment from the DB
+     *
      *
      * @param startRange start of range ZonedDateTime
      * @param endRange end of range ZonedDateTime
-     * @return Filtered list of appointments based on an input start and end date.
+     * @return Filters all appointments based on an entered start and end date.
      * @throws SQLException
      */
     public static ObservableList<Appointment> getDateFilteredAppointments(ZonedDateTime startRange, ZonedDateTime endRange)
@@ -47,7 +47,7 @@ public class AppointmentDB {
         ResultSet results = sqlCommand.executeQuery();
 
         while( results.next() ) {
-            // get data from the returned rows
+
             Integer appointmentID = results.getInt("Appointment_ID");
             String title = results.getString("Title");
             String description = results.getString("Description");
@@ -64,7 +64,6 @@ public class AppointmentDB {
             Integer contactID = results.getInt("Contact_ID");
             String contactName = results.getString("Contact_Name");
 
-            // populate into an appt object
             Appointment newAppt = new Appointment(
                     appointmentID, title, description, location, type, startDateTime, endDateTime, createdDate,
                     createdBy, lastUpdateDateTime, lastUpdatedBy, customerID, userID, contactID, contactName
@@ -78,10 +77,9 @@ public class AppointmentDB {
     }
 
     /**
-     * reportTotalsByTypeAndMonth
-     * This retrieves DB Queries and calculates sum of appointments by type and by month for use in reports page.
+     * Gets all SQL queries from the database and total the number of appointments for report purposes.
      *
-     * @return List of strings to populate in the report.
+     * @return retuns an ObservableList to generate in the report.
      * @throws SQLException
      */
     public static ObservableList<String> reportTotalsByTypeAndMonth() throws SQLException {
@@ -89,7 +87,6 @@ public class AppointmentDB {
 
         reportStrings.add("Total Number of Appointments by type and month:\n");
 
-        // Prepare SQL
         PreparedStatement typeSqlCommand = DBConnection.dbCursor().prepareStatement(
                 "SELECT Type, COUNT(Type) as \"Total\" FROM appointments GROUP BY Type");
 
@@ -121,17 +118,16 @@ public class AppointmentDB {
     }
 
     /**
-     * getCustomerFilteredAppointments
-     * This retrieves DB queries for all appointments for a specific customer on a specific date. used to find conflicts
+     * Gets all SQL queries from all appointments to verify for any conflicts.
      *
-     * @param apptDate date we are seeing for any possible appointments
-     * @param inputCustomerID customer ID we are checking for
-     * @return List of appointments for a specific customer on the input apptDate
+     * @param apptDate All possible appointments date
+     * @param inputCustomerID Researches for any customer ID
+     * @return returns an ObservableList for a specific customer appointment
      * @throws SQLException
      */
     public static ObservableList<Appointment> getCustomerFilteredAppointments(
             LocalDate apptDate, Integer inputCustomerID) throws SQLException {
-        // Prepare SQL statement
+
         ObservableList<Appointment> filteredAppts = FXCollections.observableArrayList();
         PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement(
                 "SELECT * FROM appointments as a LEFT OUTER JOIN contacts as c " +
@@ -162,7 +158,6 @@ public class AppointmentDB {
             Integer contactID = results.getInt("Contact_ID");
             String contactName = results.getString("Contact_Name");
 
-            // populate into an appt object
             Appointment newAppt = new Appointment(
                     appointmentID, title, description, location, type, startDateTime, endDateTime, createdDate,
                     createdBy, lastUpdateDateTime, lastUpdatedBy, customerID, userID, contactID, contactName
@@ -176,21 +171,20 @@ public class AppointmentDB {
     }
 
     /**
-     * updateAppointment
-     * takes the specific Appointment ID and updates it in the DB
+     * Gets all the Appointment ID and refreshes it in the database
      *
-     * @param inputApptID Holds Appointment ID
-     * @param inputTitle Holds Title of the appointment
-     * @param inputDescription Holds Description of appointment
-     * @param inputLocation Holds Location of appointment
-     * @param inputType Holds Type of appointment
-     * @param inputStart Holds Start of appointment
-     * @param inputEnd Holds end of appointment
-     * @param inputLastUpdateBy Holds date/time of update
-     * @param inputCustomerID Holds Customer ID
-     * @param inputUserID Holds User ID
-     * @param inputContactID Holds Contact ID
-     * @return Boolean indicating if operation was successful
+     * @param inputApptID Retains Appointment ID
+     * @param inputTitle Retains appointment title
+     * @param inputDescription Retains appointment description
+     * @param inputLocation Retains appointment location
+     * @param inputType Retains appointment Type
+     * @param inputStart Retains appointment Start Time
+     * @param inputEnd Retains appointment end Time
+     * @param inputLastUpdateBy Retains date/time of update of the appointment
+     * @param inputCustomerID Retains Customer ID
+     * @param inputUserID Retains User ID
+     * @param inputContactID Retains Contact ID
+     * @return Boolean displaying that the action was successful
      * @throws SQLException
      */
     public static Boolean updateAppointment(Integer inputApptID, String inputTitle, String inputDescription,
@@ -202,7 +196,7 @@ public class AppointmentDB {
                 + "SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?, Last_Update=?,Last_Updated_By=?, " +
                 "Customer_ID=?, User_ID=?, Contact_ID=? WHERE Appointment_ID = ?");
 
-        // Format inputStart and inputEnd
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String inputStartString = inputStart.format(formatter).toString();
         String inputEndString = inputEnd.format(formatter).toString();
@@ -235,21 +229,20 @@ public class AppointmentDB {
     }
 
     /**
-     * This class addAppointment add appointments
-     * Takes values and creates a new appointment in the database
+     * Generates new appointment in the database with entered inputs
      *
-     * @param inputTitle title of appointment
-     * @param inputDescription description of appointment
-     * @param inputLocation location of appointment
-     * @param inputType type of appointment
-     * @param inputStart start of appointment
-     * @param inputEnd end of appointment
-     * @param inputCreatedBy who created appointment
-     * @param inputLastUpdateBy who updated appointment last
+     * @param inputTitle appointment title
+     * @param inputDescription appointment description
+     * @param inputLocation appointment location
+     * @param inputType appointment type
+     * @param inputStart appointment start time
+     * @param inputEnd appointment end time
+     * @param inputCreatedBy shows user who sets appointment
+     * @param inputLastUpdateBy shows who updated appointment last as the last person
      * @param inputCustomerID customer ID
      * @param inputUserID user ID
      * @param inputContactID contact ID
-     * @return Boolean indicating if operation was successful
+     * @return returns Boolean displaying a successfully action
      * @throws SQLException
      */
     public static Boolean addAppointment(String inputTitle, String inputDescription,
@@ -263,12 +256,12 @@ public class AppointmentDB {
                 "Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID)\n" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-        // Format inputStart and inputEnd
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String inputStartString = inputStart.format(formatter).toString();
         String inputEndString = inputEnd.format(formatter).toString();
 
-        // Set Params
+
         sqlCommand.setString(1, inputTitle);
         sqlCommand.setString(2, inputDescription);
         sqlCommand.setString(3, inputLocation);
@@ -283,7 +276,7 @@ public class AppointmentDB {
         sqlCommand.setInt(12, inputUserID);
         sqlCommand.setInt(13, inputContactID);
 
-        // Execute query
+
         try {
             sqlCommand.executeUpdate();
             sqlCommand.close();
@@ -298,10 +291,10 @@ public class AppointmentDB {
     }
 
     /**
-     * This class deleteAppointment
+     * Deletes appointments
      *
-     * @param inputApptID ID of appointment to be deleted
-     * @return Boolean indicating if operation was successful
+     * @param inputApptID Appointment ID that can be deleted
+     * @return returns Boolean displaying a successfully action
      * @throws SQLException
      */
     public static Boolean deleteAppointment(Integer inputApptID) throws SQLException {
@@ -325,11 +318,10 @@ public class AppointmentDB {
     }
 
     /**
-     * deleteCustomersAppointments
-     * delete all appointments for a customer, to maintain referential integrity when we delete a customer
+     * Deletes all appointments from the a customer once this last is deleted from the database
      *
-     * @param customerID ID of customer to delete appointments for
-     * @return Boolean indicating if operation was successful
+     * @param customerID Customer ID for deleting appointments
+     * @return returns Boolean displaying a successful action
      * @throws SQLException
      */
     public static Boolean deleteCustomersAppointments(Integer customerID) throws SQLException {
@@ -353,15 +345,14 @@ public class AppointmentDB {
     }
 
     /**
-     * This retrieves all getAllAppointments
-     * queries database for all appointments
+     * Gets all the appointments from the database
      *
-     * @return List of all appointments
+     * @return returns an ObservableList of all appointments
      * @throws SQLException
      */
     public static ObservableList<Appointment> getAllAppointments() throws SQLException {
 
-        // Prepare SQL and execute query
+
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
         PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("SELECT * FROM appointments as a\n" +
                 "LEFT OUTER JOIN contacts as c ON a.Contact_ID = c.Contact_ID;");
@@ -369,7 +360,7 @@ public class AppointmentDB {
 
 
         while( results.next() ) {
-            // get data from the returned rows
+
             Integer appointmentID = results.getInt("Appointment_ID");
             String title = results.getString("Title");
             String description = results.getString("Description");
@@ -386,13 +377,13 @@ public class AppointmentDB {
             Integer contactID = results.getInt("Contact_ID");
             String contactName = results.getString("Contact_Name");
 
-            // populate into an appt object
+
             Appointment newAppt = new Appointment(
                     appointmentID, title, description, location, type, startDateTime, endDateTime, createdDate,
                     createdBy, lastUpdateDateTime, lastUpdatedBy, customerID, userID, contactID, contactName
             );
 
-            // Add to the observablelist
+
             allAppointments.add(newAppt);
 
         }
@@ -403,9 +394,9 @@ public class AppointmentDB {
 
     /**
      * getAppointmentsIn15Mins
-     * This method allow queries DB to find appointments for sign in user starting within 15 minutes.
+     * Gets all appointment queries from the Database to find any existing appointment within the 15 min when signing in.
      *
-     * @return list of appointments for user that start in 15 mins.
+     * @return retuns Observablelist all user's appointments starting in 15 mins.
      * @throws SQLException
      */
     public static ObservableList<Appointment> getAppointmentsIn15Mins() throws SQLException {
@@ -414,13 +405,13 @@ public class AppointmentDB {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        // prepare times and convert to UTC
+
         LocalDateTime now = LocalDateTime.now();
         ZonedDateTime userTZnow = now.atZone(LogonSession.getUserTimeZone());
         ZonedDateTime nowUTC = userTZnow.withZoneSameInstant(ZoneOffset.UTC);
         ZonedDateTime utcPlus15 = nowUTC.plusMinutes(15);
 
-        // create input strings
+
         String rangeStart = nowUTC.format(formatter).toString();
         String rangeEnd = utcPlus15.format(formatter).toString();
         Integer logonUserID = LogonSession.getLoggedOnUser().getUserID();
@@ -437,7 +428,7 @@ public class AppointmentDB {
         ResultSet results = sqlCommand.executeQuery();
 
         while( results.next() ) {
-            // get data from the returned rows
+
             Integer appointmentID = results.getInt("Appointment_ID");
             String title = results.getString("Title");
             String description = results.getString("Description");
@@ -459,7 +450,6 @@ public class AppointmentDB {
                     createdBy, lastUpdateDateTime, lastUpdatedBy, customerID, userID, contactID, contactName
             );
 
-            // Add to the observablelist
             allAppointments.add(newAppt);
 
         }

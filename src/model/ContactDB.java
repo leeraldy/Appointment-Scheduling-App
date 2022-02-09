@@ -11,18 +11,17 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
- * This class ContactDB retrieves all the contact in DB
+ * ContactDB Class: Handles all the contact in Database
  *
  * @author Hussein Coulibaly
  */
 public class ContactDB {
 
     /**
-     * getMinutesScheduled
-     * This method calculates sum of minutes for all appointments for a specific contact
+     * Gets the total sum of minutes for all appointments from a specific contact
      *
-     * @param contactID ID of contact to find sum for
-     * @return Total number of minutes scheduled
+     * @param contactID Contact ID to find the total sum
+     * @return returns the total sum of number of minutes scheduled
      * @throws SQLException
      */
     public static Integer getMinutesScheduled(String contactID) throws SQLException {
@@ -46,11 +45,10 @@ public class ContactDB {
     }
 
     /**
-     * getContactAppts
-     * This method get all appointments for a specific contact
+     * Gets all appointments from a specific contact
      *
-     * @param contactID ID of contact to find appointments
-     * @return List of appointments for contact
+     * @param contactID Contact ID to retrieve appointments
+     * @return returns ObservableList of all appointments from a specific contact
      * @throws SQLException
      */
     public static ObservableList<String> getContactAppts(String contactID) throws SQLException {
@@ -87,10 +85,9 @@ public class ContactDB {
     }
 
     /**
-     * getAllContactName
-     * gets the name of all contacts
+     * Retrieves all contacts name
      *
-     * @return list of all contact names
+     * @return returns Observablelist of all contact names
      * @throws SQLException
      */
     public static ObservableList<String> getAllContactName() throws SQLException {
@@ -108,14 +105,14 @@ public class ContactDB {
 
     /**
      * findContactID
-     * This method pulls the name of the contact and finds the ID for usage with other DB operations.
+     * Gets the contact name and associates the ID to all other operations to that contact
      *
-     * @param contactName name of contact we are searching ID for
-     * @return Corresponding Contact ID
+     * @param contactName contact name of the ID that has been searched
+     * @return returns a Contact ID that corresponds
      * @throws SQLException
      */
     public static Integer findContactID(String contactName) throws SQLException {
-        // take user selected name and find the FK so we can add to appointments table.
+
         Integer contactID = -1;
         PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("SELECT Contact_ID, Contact_Name " +
                 "FROM contacts WHERE Contact_Name = ?");
@@ -123,7 +120,6 @@ public class ContactDB {
         ResultSet results = sqlCommand.executeQuery();
 
         while (results.next()) {
-            // should always return one value, since the Contact_name was retrieved from DB as well.
             contactID = results.getInt("Contact_ID");
         }
         sqlCommand.close();
