@@ -25,7 +25,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 /**
- * This class handles new appointment addition
+ * AddAppointment Class: Handles new appointment addition
  *
  * @author Hussein Coulibaly
  */
@@ -158,7 +158,7 @@ public class AddAppointment implements Initializable {
 
         }
         else {
-            // Validates inputs and inserts into Database and shows success and clear.
+
             zonedStartDateTime = ZonedDateTime.of(startDateTime, LogonSession.getUserTimeZone());
             zonedEndDateTime = ZonedDateTime.of(endDateTime, LogonSession.getUserTimeZone());
             String loggedOnUserName = LogonSession.getLoggedOnUser().getUserName();
@@ -217,10 +217,10 @@ public class AddAppointment implements Initializable {
     /**
      * Validates only appointments made within business hours
      *
-     * @param startDateTime start appointment datetime
-     * @param endDateTime end appointment datetime
-     * @param apptDate appointment date
-     * @return Boolean indicating valid input
+     * @param startDateTime appointment datetime is started
+     * @param endDateTime  appointment datetime ended
+     * @param apptDate date of appointment
+     * @return returns Boolean showing valid input
      */
     public Boolean validateBusinessHours(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDate apptDate) {
         // (8am to 10pm EST, Not including weekends)
