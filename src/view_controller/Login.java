@@ -16,7 +16,7 @@ import java.util.*;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.event.ActionEvent;
-import utility.Logger;
+import utils.Logger;
 
 import java.net.URL;
 

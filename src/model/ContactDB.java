@@ -2,7 +2,7 @@ package model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import utility.DBConnection;
+import utils.DBConnection;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

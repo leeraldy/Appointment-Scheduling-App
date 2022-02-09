@@ -1,16 +1,17 @@
-package utility;
+package utils;
 
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 /**
- * SqlDatabase
+ * DBConnection Class: Handles SqlDatabase connection
  *
  * @author Hussein Coulibaly
  */
 public class DBConnection {
 
+    //
     private static final String  protocol = "jdbc";
     private static String vendor = ":mysql:";
     private static String location = "//localhost/";
@@ -22,49 +23,37 @@ public class DBConnection {
     private static Connection cursor;
 
     /**
-     * Handles the connection to the database
+     * Manages the database connection
      */
     public DBConnection() { };
 
-    /**
-     * Setter - JDBC url
-     *
-     * @param jdbcUrlInput JDBC url for connectivity
-     */
+    // Driver reference Jdbc
+
     public static void setJdbcUrl(String jdbcUrlInput) {
         jdbcUrl = jdbcUrlInput;
     }
 
-    /**
-     * Setter- DbName
-     *
-     * @param dbNameInput DB name for connectivity
-     */
+    // Database name
     public static void setDbName(String dbNameInput) {
         dbName = dbNameInput;
     }
 
-    /**
-     * Setter - DB username
-     *
-     * @param userNameInput DB username for DB login
-     */
+
+     //username
+
     public static void setUserName(String userNameInput) {
         userName = userNameInput;
     }
 
     /**
-     * Setter - DB password
-     *
-     * @param passwordInput password for login
+     * password
      */
     public static void setPassword(String passwordInput) {
         password = passwordInput;
     }
 
     /**
-     * connectDB
-     * Connect to the database
+     * Establishes connection with the database
      */
     public static void connectDB() {
         try {
@@ -81,11 +70,8 @@ public class DBConnection {
 
     }
 
-    /**
-     * dbCursor
-     *
-     * @return DB connection for use
-     */
+
+     //@return returns Database object - dbcurso
     public static Connection dbCursor() {
         return cursor;
     }

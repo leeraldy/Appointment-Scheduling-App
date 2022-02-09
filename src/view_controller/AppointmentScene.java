@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import model.Appointment;
 import model.AppointmentDB;
 import model.LogonSession;
-import utility.DBConnection;
+import utils.DBConnection;
 
 import java.io.IOException;
 import java.net.URL;

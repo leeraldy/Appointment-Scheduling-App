@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import utility.DBConnection;
+import utils.DBConnection;
 import java.sql.SQLException;
 
 /**

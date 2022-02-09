@@ -1,14 +1,13 @@
-package utility;
+package utils;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 /**
- * This method is called when something needs to be written in the log.
+ * Logger Class: Handles anything that needs to be put in the log.
  *
  * @author Hussein Coulibaly
  */
@@ -17,11 +16,10 @@ public class Logger {
     private static final String logPath = "login_activity.txt";
 
     /**
-     * auditLogon
-     * Log a logon activity in the text file
+     * Retains all Log of user log in activity in the text file format
      *
-     * @param userName userName of the logged on user
-     * @param successBool Boolean to indicate successful logon
+     * @param userName userName of logged user
+     * @param successBool returns Boolean to show successful log in
      * @throws IOException
      */
     public static void auditLogin(String userName, Boolean successBool) throws IOException {
