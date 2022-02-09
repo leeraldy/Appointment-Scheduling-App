@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * Handles the main customers screen
+ * CustomerScene: Handles the main customers screen objects
  * @author Hussein Coulibaly
  */
 public class CustomerScene implements Initializable {
@@ -55,7 +55,7 @@ public class CustomerScene implements Initializable {
      * Populates next screen
      *
      * @param event Button Click
-     * @param switchPath Path to next stage
+     * @param switchPath Path to next scene
      * @throws IOException
      */
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
@@ -68,7 +68,7 @@ public class CustomerScene implements Initializable {
 
     /**
      *
-     * Redirects to Custmer scene
+     * Redirects to Customer scene
      *
      * @param inputList list of customers
      */
@@ -106,7 +106,7 @@ public class CustomerScene implements Initializable {
         Customer selectedCustomer = customerTable.getSelectionModel().getSelectedItem();
         if (selectedCustomer == null) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-            Alert alert = new Alert(Alert.AlertType.WARNING, "No selected Customer", clickOkay);
+            Alert alert = new Alert(Alert.AlertType.WARNING, "No Customer selected", clickOkay);
             alert.showAndWait();
             return;
 
@@ -142,7 +142,7 @@ public class CustomerScene implements Initializable {
         else {
             ButtonType clickYes = ButtonType.YES;
             ButtonType clickNo = ButtonType.NO;
-            Alert deleteAlert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete Customer: "
+            Alert deleteAlert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete this customer: "
                     + selectedCustomer.getCustomerID() + " and all related appointments?", clickYes, clickNo);
             Optional<ButtonType> result = deleteAlert.showAndWait();
 
@@ -185,7 +185,7 @@ public class CustomerScene implements Initializable {
     }
 
     /**
-     * Returns previous scene
+     * Returns back previous scene
      *
      * @param event ButtonClick
      * @throws IOException
@@ -197,7 +197,7 @@ public class CustomerScene implements Initializable {
     }
 
     /**
-     * Populates to the mainscreen
+     * Returns the user to the mainscreen
      *
      * @param location user location
      * @param resources resources

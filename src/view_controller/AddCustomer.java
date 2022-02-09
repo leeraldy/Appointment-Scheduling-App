@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * This controller handles customers addition.
+ * AddCustomer Class: Handles customers addition.
  * @author Hussein Coulibaly
  */
 public class AddCustomer implements Initializable {
@@ -47,7 +47,7 @@ public class AddCustomer implements Initializable {
      * Sets initial scene to add customers
      *
      * @param event button press
-     * @param switchPath path to new stage
+     * @param switchPath path to new scene
      * @throws IOException
      */
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
@@ -59,7 +59,7 @@ public class AddCustomer implements Initializable {
     }
 
     /**
-     * Validates inputs
+     * Validates inputs entered
      *
      * @param event Button press
      * @throws SQLException
@@ -89,7 +89,7 @@ public class AddCustomer implements Initializable {
         Boolean success = CustomerDB.addCustomer(country, division, name, address, postalCode, phone,
                 CustomerDB.getSpecificDivisionID(division));
 
-        // Generates successfully added message, there's error found.
+        // Generates successfully added message, if no error found.
         if (success) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Customer added successfully!", clickOkay);
@@ -107,7 +107,7 @@ public class AddCustomer implements Initializable {
     }
 
     /**
-     * Removes fields on scene when clcked
+     * Removes fields on scene when clicked
      *
      * @param event Button Click
      */
@@ -122,7 +122,7 @@ public class AddCustomer implements Initializable {
     }
 
     /**
-     * Return to previous screen
+     * Return back to previous screen
      * @param event Button Click
      */
     public void pressBackButton(ActionEvent event) throws IOException {
@@ -135,7 +135,7 @@ public class AddCustomer implements Initializable {
      * Lambda expression - creates a listener for changes in a ComboBox
      *
      * @param url path of scene
-     * @param resourceBundle finds root object
+     * @param resourceBundle locates the root object
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

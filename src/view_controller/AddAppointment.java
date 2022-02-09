@@ -129,7 +129,7 @@ public class AddAppointment implements Initializable {
                 startDateTime == null) {
 
             errorMessage += "Please ensure a value has been entered in all fields.\n";
-            // Throw error if found
+            // Throws error if found
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
             Alert invalidInput = new Alert(Alert.AlertType.WARNING, errorMessage, clickOkay);
             invalidInput.showAndWait();
@@ -137,12 +137,12 @@ public class AddAppointment implements Initializable {
 
         }
 
-        // INPUT VALIDATION: validates business hours are valid.
+        // INPUT VALIDATION: validates business hours if valid.
         validBusinessHours = validateBusinessHours(startDateTime, endDateTime, apptDate);
         validOverlap = validateCustomerOverlap(customerID, startDateTime, endDateTime, apptDate);
 
         if (!validBusinessHours) {
-            errorMessage += "You are not allowed to schedule an appointment out of business hours.(8am to 10pm EST)\n";
+            errorMessage += "You are not allowed to schedule an appointment out of business hours. It should be between 8am to 10pm EST\n";
         }
         if (!validOverlap) {
             errorMessage += "Invalid, Customer Overlap. You cannot double book customers.\n";
@@ -204,7 +204,7 @@ public class AddAppointment implements Initializable {
     }
 
     /**
-     * Reverts back to previous scene
+     * Returns back to previous scene
      *
      * @param event button press
      * @throws IOException
@@ -215,16 +215,15 @@ public class AddAppointment implements Initializable {
     }
 
     /**
-     * Validates only appointments made within business hours
+     * Accepts only appointments made within business hours
      *
      * @param startDateTime appointment datetime is started
      * @param endDateTime  appointment datetime ended
-     * @param apptDate date of appointment
+     * @param apptDate appointment date
      * @return returns Boolean showing valid input
      */
     public Boolean validateBusinessHours(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDate apptDate) {
         // (8am to 10pm EST, Not including weekends)
-        // Outputs a timestamp based on user input entered.
 
         ZonedDateTime startZonedDateTime = ZonedDateTime.of(startDateTime, LogonSession.getUserTimeZone());
         ZonedDateTime endZonedDateTime = ZonedDateTime.of(endDateTime, LogonSession.getUserTimeZone());
@@ -234,7 +233,7 @@ public class AddAppointment implements Initializable {
         ZonedDateTime endBusinessHours = ZonedDateTime.of(apptDate, LocalTime.of(22, 00),
                 ZoneId.of("America/New_York"));
 
-        // Validates all the business hours and entered time accordingly
+        // Validates all the business hours and update time accordingly
 
         if (startZonedDateTime.isBefore(startBusinessHours) | startZonedDateTime.isAfter(endBusinessHours) |
                 endZonedDateTime.isBefore(startBusinessHours) | endZonedDateTime.isAfter(endBusinessHours) |
@@ -256,7 +255,7 @@ public class AddAppointment implements Initializable {
      * @param endDateTime appointment end datetime
      * @param apptDate appointment date
 
-     * @return Boolean indicating valid input inserted
+     * @return returns Boolean displaying valid input inserted
      */
     public Boolean validateCustomerOverlap(Integer inputCustomerID, LocalDateTime startDateTime,
                                            LocalDateTime endDateTime, LocalDate apptDate) throws SQLException {

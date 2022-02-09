@@ -21,7 +21,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 /**
- * Handles modification of the saved appointments
+ * ModifyAppointment Class: Handles any changes of the saved appointments
  * @author Hussein Coulibaly
  */
 public class ModifyAppointment implements Initializable {
@@ -76,7 +76,7 @@ public class ModifyAppointment implements Initializable {
     /**
      * Pre-populates all the input fields
      *
-     * @param selectedAppt appt from previous stage
+     * @param selectedAppt previous scene appointment
      * @throws SQLException
      */
     public void initData(Appointment selectedAppt) throws SQLException {
@@ -100,7 +100,7 @@ public class ModifyAppointment implements Initializable {
         String localStartString = localStartDateTime.format(formatter);
         String localEndString = localEndDateTime.format(formatter);
 
-        // Merges values
+        // Merges all values
         appointmentIDTextBox.setText(selectedAppt.getAppointmentID().toString());
         titleTextBox.setText(selectedAppt.getTitle());
         descriptionTextBox.setText(selectedAppt.getDescription());
@@ -155,10 +155,10 @@ public class ModifyAppointment implements Initializable {
      * Executes input validation by checking any overlapping appointments
      *
      * @param inputCustomerID Customer ID
-     * @param startDateTime Start date time for appointment
-     * @param endDateTime end date time for appointment
-     * @param apptDate appointment date
-     * @return Boolean indicating if input is valid
+     * @param startDateTime appointment start date time
+     * @param endDateTime appointment end date time
+     * @param apptDate date of appointment
+     * @return returns Boolean showing valid input
      * @throws SQLException
      */
     public Boolean validateCustomerOverlap(Integer inputCustomerID, LocalDateTime startDateTime,
@@ -217,7 +217,7 @@ public class ModifyAppointment implements Initializable {
     }
 
     /**
-     * Returns previous screen
+     * Returns back to previous screen
      *
      * @param event Button Press
      * @throws IOException
@@ -270,7 +270,7 @@ public class ModifyAppointment implements Initializable {
         }
         catch(DateTimeParseException error) {
             validStartDateTime = false;
-            errorMessage += "Invalid Start time. Please ensure proper format HH:MM, including leading 0's.\n";
+            errorMessage += "Invalid Start time. Please ensure correct format HH:MM, including leading 0's.\n";
         }
 
         try {
@@ -280,10 +280,10 @@ public class ModifyAppointment implements Initializable {
         }
         catch(DateTimeParseException error) {
             validEndDateTime = false;
-            errorMessage += "Invalid End time. Please ensure proper format HH:MM, including leading 0's.\n";
+            errorMessage += "Invalid End time. Please ensure correct format HH:MM, including leading 0's.\n";
         }
 
-        // INPUT VALIDATION: Ensure all fields have been entered
+        // INPUT VALIDATION: Ensure all fields are entered
         if (title.isBlank() || description.isBlank() || location.isBlank() || contactName == null || type.isBlank() ||
                 customerID == null || userID == null || apptDate == null || endDateTime == null ||
                 startDateTime == null) {
@@ -350,7 +350,7 @@ public class ModifyAppointment implements Initializable {
     }
 
     /**
-     * Initializes screen
+     * Initiates screen
      *
      * @param url scene path
      * @param resourceBundle resources

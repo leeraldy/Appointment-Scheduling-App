@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * Handles reports that are recorded
+ * Reports Class: Handles reports that are recorded
  * @author Hussein Coulibaly
  */
 public class Reports implements Initializable {
@@ -52,7 +52,7 @@ public class Reports implements Initializable {
     }
 
     /**
-     * Sets screen to previous scene
+     * Returns back to previous scene
      *
      * @param event Button Press
      * @throws IOException
@@ -63,7 +63,7 @@ public class Reports implements Initializable {
     }
 
     /**
-     * Populates the first report
+     * Generates the first report
      *
      * @param event Button Press
      * @throws SQLException
@@ -79,7 +79,7 @@ public class Reports implements Initializable {
     }
 
     /**
-     * Populates second report
+     * Generates the second report
      *
      * @param event Button Press
      * @throws SQLException
@@ -95,7 +95,7 @@ public class Reports implements Initializable {
     }
 
     /**
-     * Populates 3rd report
+     * Generates the third report
      *
      * @param event Button Click
      * @throws SQLException
@@ -121,7 +121,7 @@ public class Reports implements Initializable {
 
 
     /**
-     * Populates main screen
+     * Redirects to the main screen
      *
      * @param location location
      * @param resources resources

@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * Handles the modification of the current customer
+ * ModifyCustomer Class: Handles the changes of the current customer
  * @author Hussein Coulibaly
  */
 public class ModifyCustomer implements Initializable {
@@ -85,7 +85,7 @@ public class ModifyCustomer implements Initializable {
     }
 
     /**
-     * Validates input and inputs
+     * Validates inputs
      *
      * @param event Button Press
      * @throws IOException
@@ -143,7 +143,7 @@ public class ModifyCustomer implements Initializable {
     }
 
     /**
-     * Returns to previous scene
+     * Returns back to previous scene
      *
      * @param event Button Press
      * @throws IOException

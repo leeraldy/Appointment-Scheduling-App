@@ -16,9 +16,8 @@ import java.sql.SQLException;
 public class Main extends Application{
 
     /**
-     *
-     * This is the call to load the first scene.
-     * @param primaryScene sets the primary stage.
+     * Loads the first scene of the applicartion
+     * @param primaryScene sets the primary scene.
      */
 
     @Override

@@ -22,7 +22,7 @@ import java.net.URL;
 
 /**
  *
- * This class displays and handles the login
+ * Login Class: Handles the user login
  *
  * @author Hussein Coulibaly
  */
@@ -47,7 +47,7 @@ public class Login implements Initializable {
     private Label zoneLabel;
 
     /**
-     * Sets a login screen
+     * Lauches login screen
      * @param event Button Press
      * @param this pass routes path to new scene
      */
@@ -103,7 +103,7 @@ public class Login implements Initializable {
             // Generate a notification no upcoming appointments if no appointments are found within 15 minutes.
             else {
                 ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-                Alert invalidInput = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming Appointments", clickOkay);
+                Alert invalidInput = new Alert(Alert.AlertType.CONFIRMATION, "There's no upcoming Appointments", clickOkay);
                 invalidInput.showAndWait();
             }
 
@@ -140,7 +140,7 @@ public class Login implements Initializable {
     }
 
     /**
-     * Returns to mainscreen
+     * Returns the user to the mainscreen
      *
      * @param location Time zone
      * @param resources resources

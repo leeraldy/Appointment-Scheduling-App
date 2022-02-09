@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
 /**
  * * @author Hussein Coulibaly
  *
- * Handles the main screen and other screens
+ * AppointmentScene Class: Handles the main screen and other screens objects
  */
 public class AppointmentScene implements Initializable {
     @FXML
@@ -360,7 +360,7 @@ public class AppointmentScene implements Initializable {
 
                 }
 
-                // Return appointment screen
+                // Returns appointment screen
                 try {
                     populateAppointments(AppointmentDB.getAllAppointments());
                 }
@@ -467,7 +467,7 @@ public class AppointmentScene implements Initializable {
     /**
      * Populates appointments on the screen
      *
-     * @param inputList list of appointments
+     * @param inputList appointments list
      */
     public void populateAppointments(ObservableList<Appointment> inputList) {
 
@@ -504,7 +504,7 @@ public class AppointmentScene implements Initializable {
 
 
     /**
-     * Initializes mainscreen
+     * Initiates mainscreen
      *
      * @param location location / time zone
      * @param resources resources
