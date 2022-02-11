@@ -46,7 +46,7 @@ public class AddAppointment implements Initializable {
     @ FXML
     ComboBox<Integer> userComboBox;
     @ FXML
-    Label timeZoneLabel;
+    Label timeZoneTag;
     @ FXML
     DatePicker apptDatePicker;
     @ FXML
@@ -300,7 +300,7 @@ public class AddAppointment implements Initializable {
      */
     public void initialize(URL location, ResourceBundle resources) {
 
-        timeZoneLabel.setText("Your Time Zone:" + LogonSession.getUserTimeZone());
+        timeZoneTag.setText("Your Time Zone:" + LogonSession.getUserTimeZone());
 
         //Lambda Expression
 

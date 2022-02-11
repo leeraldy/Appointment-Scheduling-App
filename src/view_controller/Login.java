@@ -112,7 +112,7 @@ public class Login implements Initializable {
         }
         else {
             Locale userLocale = Locale.getDefault();
-            ResourceBundle resources = ResourceBundle.getBundle("language_property/login");
+            ResourceBundle resources = ResourceBundle.getBundle("language/login");
             ButtonType clickOkay = new ButtonType(resources.getString("okayButton"), ButtonBar.ButtonData.OK_DONE);
             Alert failedLogon = new Alert(Alert.AlertType.WARNING, resources.getString("logonFailedButton"),
                     clickOkay);
@@ -150,7 +150,7 @@ public class Login implements Initializable {
 
         Locale userLocale = Locale.getDefault();
         zoneLabel.setText(ZoneId.systemDefault().toString());
-        resources = ResourceBundle.getBundle("language_property/login");
+        resources = ResourceBundle.getBundle("language/login");
         titleLabel.setText(resources.getString("titleLabel"));
         userNameLabel.setText(resources.getString("userNameLabel"));
         passwordLabel.setText(resources.getString("passwordLabel"));

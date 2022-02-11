@@ -9,22 +9,18 @@ import utils.DBConnection;
 import java.sql.SQLException;
 
 /**
- * Main Class: The application is launches here
+ * Main Class: The application launches
  *
  * @author Hussein Coulibaly
  */
 public class Main extends Application{
 
-    /**
-     * Loads the first scene of the applicartion
-     * @param primaryScene sets the primary scene.
-     */
 
     @Override
     public void start(Stage primaryScene) throws Exception {
-        primaryScene.setTitle("Appointment Scheduling");
+        primaryScene.setTitle("Appointment System");
         Parent root = FXMLLoader.load(getClass().getResource("/view_controller/Login.fxml"));
-        primaryScene.setScene(new Scene(root));
+        primaryScene.setScene(new Scene(root, 600, 400));
         primaryScene.show();
     }
 
