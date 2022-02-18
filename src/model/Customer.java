@@ -3,7 +3,7 @@ package model;
 import java.sql.Timestamp;
 
 /**
- * Customer Class: Handles Customer objects
+ * Customer Class: Manages Customer objects
  *
  * @author Hussein Coulibaly
  */
@@ -18,95 +18,109 @@ public class Customer {
     private String division;
     private String country;
 
-    /**
-     * Constructor to create new Customer object
-     *
-     * @param inputCustomerID Customer ID
-     * @param inputName Customer name
-     * @param inputAddress Customer address
-     * @param inputPostalCode Customer postal code
-     * @param inputPhoneNumber Customer phone number
-     * @param inputDivision Customer first division
-     * @param inputDivID Customer Division
-     * @param inputCountry Customer Country
-     */
-    public Customer(Integer inputCustomerID, String inputName, String inputAddress, String inputPostalCode,
-                    String inputPhoneNumber, String inputDivision, Integer inputDivID, String inputCountry) {
-        ID = inputCustomerID;
-        name = inputName;
-        address = inputAddress;
-        postalCode = inputPostalCode;
-        phoneNumber = inputPhoneNumber;
-        division = inputDivision;
-        divisionID = inputDivID;
-        country = inputCountry;
+
+    public Customer(Integer inCustomerID, String inName, String inAddress, String inPostalCode,
+                    String inPhoneNumber, String inDivision, Integer inDivID, String inCountry) {
+        this.ID = inCustomerID;
+        this.name = inName;
+        this.address = inAddress;
+        this.postalCode = inPostalCode;
+        this.phoneNumber = inPhoneNumber;
+        this.division = inDivision;
+        this.divisionID = inDivID;
+        this.country = inCountry;
 
     }
 
 
-    // Getters
-
-    /**
-     * Getter - customer ID
-     * @return customer ID
-     */
     public Integer getCustomerID() {
-        return ID;
+        return this.ID;
     }
 
-    /**
-     * Getter - name
-     * @return Customer name
-     */
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
-    /**
-     * Getter - Address
-     * @return Customer address
-     */
+
     public String getAddress() {
-        return address;
+        return this.address;
     }
 
-    /**
-     * Getter - postal code
-     * @return Customer postal code
-     */
+
     public String getPostalCode() {
-        return postalCode;
+        return this.postalCode;
     }
 
-    /**
-     * Getter - Phone number
-     * @return phone number of customer
-     */
+
     public String getPhoneNumber() {
-        return phoneNumber;
+        return this.phoneNumber;
     }
 
-    /**
-     * Getter - Division
-     * @return Customers division
-     */
+
     public String getDivision() {
-        return division;
+        return this.division;
     }
 
-    /**
-     * Getter - Country
-     * @return Customer Country
-     */
+
     public String getCountry() {
-        return country;
+        return this.country;
     }
 
-    /**
-     * Getter - Division ID
-     * @return Customer division
-     */
+
     public Integer getDivisionID() {
         return divisionID;
     }
+
+//    public static boolean validateCustomer(String name, String address, String postalCode, String phoneNumber ){
+//        String errors = " ";
+//
+//        if(name.isEmpty() || name.isBlank()){
+//            errors = errors + " A Name is requires.\n";
+//        }
+//        if(name.length() > 35){
+//            errors = errors + " The name cannot exceed 35 characteres.\n";
+//        }
+//        if(address.isEmpty() || address.isBlank())
+//        {
+//            errors = errors + " An entry for Address is required.\n";
+//        }
+//        if(address.length() > 100)
+//        {
+//            errors = errors + " The entry for Name cannot exceed 100 characters.\n";
+//        }
+//        if(postalCode.isEmpty() || postalCode.isBlank())
+//        {
+//            errors = errors + " An entry for Postal Code is required.\n";
+//        }
+//        if(postalCode.length() > 50)
+//        {
+//            errors = errors + " The entry for Postal Code cannot exceed 50 characters.\n";
+//        }
+//        if(phoneNumber.isEmpty() || phoneNumber.isBlank())
+//        {
+//            errors = errors + " An entry for Phone is required.\n";
+//        }
+//        if(phoneNumber.length() > 50)
+//        {
+//            errors = errors + " The entry for Phone cannot exceed 50 characters.\n";
+//        }
+//
+//        if(errors.isEmpty())
+//        {
+//            return true;
+//        }
+//        else
+//        {
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Customers");
+//            alert.setHeaderText("Please verify the following error(s):");
+//            alert.setContentText(errors);
+//            alert.showAndWait();
+//
+//            return false;
+//        }
+//    }
+
 }
+

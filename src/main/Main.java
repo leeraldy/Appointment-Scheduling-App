@@ -9,7 +9,7 @@ import utils.DBConnection;
 import java.sql.SQLException;
 
 /**
- * Main Class: The application launches
+ * Main Class: Manages the application launch
  *
  * @author Hussein Coulibaly
  */

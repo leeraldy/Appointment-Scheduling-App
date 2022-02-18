@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * Reports Class: Handles reports that are recorded
+ * Reports Class: Manages recorded reports
  * @author Hussein Coulibaly
  */
 public class Reports implements Initializable {
@@ -36,13 +36,7 @@ public class Reports implements Initializable {
     @FXML
     Button backButton;
 
-    /**
-     * Initiates new scene
-     *
-     * @param event Button Press
-     * @param switchPath path to new scene
-     * @throws IOException
-     */
+
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(switchPath));
         Scene scene = new Scene(parent);
@@ -51,26 +45,16 @@ public class Reports implements Initializable {
         window.show();
     }
 
-    /**
-     * Returns back to previous scene
-     *
-     * @param event Button Press
-     * @throws IOException
-     */
+
     public void pressBackButton(ActionEvent event) throws IOException {
         switchScreen(event, "/view_controller/AppointmentScene.fxml");
 
     }
 
-    /**
-     * Generates the first report
-     *
-     * @param event Button Press
-     * @throws SQLException
-     */
+    // Generates the first report
     public void pressApptByReportButton(ActionEvent event) throws SQLException {
 
-        ObservableList<String> reportStrings = AppointmentDB.reportTotalsByTypeAndMonth();
+        ObservableList<String> reportStrings = AppointmentDB.monthlyReviewTypeAndMonth();
 
         for (String str : reportStrings) {
             reportTextField.appendText(str);
@@ -85,12 +69,12 @@ public class Reports implements Initializable {
      * @throws SQLException
      */
     public void pressMinsPerContact(ActionEvent event ) throws SQLException {
-        ObservableList<String> contacts = ContactDB.getAllContactName();
+        ObservableList<String> contacts = ContactDB.getAllContactByName();
 
         for (String contact: contacts) {
-            String contactID = ContactDB.findContactID(contact).toString();
+            String contactID = ContactDB.obtainContactID(contact).toString();
             reportTextField.appendText("Contact Name: " + contact + " ID: " + contactID + "\n");
-            reportTextField.appendText("    Total Mins scheduled: " + ContactDB.getMinutesScheduled(contactID) + "\n");
+            reportTextField.appendText("    Total Mins scheduled: " + ContactDB.getMinutesTimetable(contactID) + "\n");
         }
     }
 
@@ -102,10 +86,10 @@ public class Reports implements Initializable {
      */
     public void pressContactSchedule(ActionEvent event) throws SQLException {
 
-        ObservableList<String> contacts = ContactDB.getAllContactName();
+        ObservableList<String> contacts = ContactDB.getAllContactByName();
 
         for (String contact : contacts) {
-            String contactID = ContactDB.findContactID(contact).toString();
+            String contactID = ContactDB.obtainContactID(contact).toString();
             reportTextField.appendText("Contact Name: " + contact + " ID: " + contactID + "\n");
 
             ObservableList<String> appts = ContactDB.getContactAppts(contactID);
@@ -120,12 +104,7 @@ public class Reports implements Initializable {
     }
 
 
-    /**
-     * Redirects to the main screen
-     *
-     * @param location location
-     * @param resources resources
-     */
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

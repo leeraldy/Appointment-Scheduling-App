@@ -93,8 +93,8 @@ public class ModifyAppointment implements Initializable {
         ZonedDateTime startDateTimeUTC = selectedAppt.getStartDateTime().toInstant().atZone(ZoneOffset.UTC);
         ZonedDateTime endDateTimeUTC = selectedAppt.getEndDateTime().toInstant().atZone(ZoneOffset.UTC);
 
-        ZonedDateTime localStartDateTime = startDateTimeUTC.withZoneSameInstant(LogonSession.getUserTimeZone());
-        ZonedDateTime localEndDateTime = endDateTimeUTC.withZoneSameInstant(LogonSession.getUserTimeZone());
+        ZonedDateTime localStartDateTime = startDateTimeUTC.withZoneSameInstant(LoginSession.getUserTimeZone());
+        ZonedDateTime localEndDateTime = endDateTimeUTC.withZoneSameInstant(LoginSession.getUserTimeZone());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         String localStartString = localStartDateTime.format(formatter);
@@ -105,7 +105,7 @@ public class ModifyAppointment implements Initializable {
         titleTextBox.setText(selectedAppt.getTitle());
         descriptionTextBox.setText(selectedAppt.getDescription());
         locationTextBox.setText(selectedAppt.getLocation());
-        contactComboBox.setItems(ContactDB.getAllContactName());
+        contactComboBox.setItems(ContactDB.getAllContactByName());
         contactComboBox.getSelectionModel().select(selectedAppt.getContactName());
         typeTextBox.setText(selectedAppt.getType());
         customerComboBox.setItems(CustomerDB.getAllCustomerID());
@@ -130,8 +130,8 @@ public class ModifyAppointment implements Initializable {
     public Boolean validateBusinessHours(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDate apptDate) {
         // (8am to 10pm EST, Not including weekends)
 
-        ZonedDateTime startZonedDateTime = ZonedDateTime.of(startDateTime, LogonSession.getUserTimeZone());
-        ZonedDateTime endZonedDateTime = ZonedDateTime.of(endDateTime, LogonSession.getUserTimeZone());
+        ZonedDateTime startZonedDateTime = ZonedDateTime.of(startDateTime, LoginSession.getUserTimeZone());
+        ZonedDateTime endZonedDateTime = ZonedDateTime.of(endDateTime, LoginSession.getUserTimeZone());
 
         ZonedDateTime startBusinessHours = ZonedDateTime.of(apptDate, LocalTime.of(8,0),
                 ZoneId.of("America/New_York"));
@@ -165,7 +165,7 @@ public class ModifyAppointment implements Initializable {
                                            LocalDateTime endDateTime, LocalDate apptDate) throws SQLException {
 
         // Check for any appointment conflicts
-        ObservableList<Appointment> possibleConflicts = AppointmentDB.getCustomerFilteredAppointments(apptDate,
+        ObservableList<Appointment> possibleConflicts = AppointmentDB.getAppointmentsFilteredByCustomer(apptDate,
                 inputCustomerID);
 
         if (possibleConflicts.isEmpty()) {
@@ -256,7 +256,7 @@ public class ModifyAppointment implements Initializable {
         ZonedDateTime zonedEndDateTime = null;
         ZonedDateTime zonedStartDateTime = null;
 
-        Integer contactID = ContactDB.findContactID(contactName);
+        Integer contactID = ContactDB.obtainContactID(contactName);
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -320,9 +320,9 @@ public class ModifyAppointment implements Initializable {
         }
         else {
 
-            zonedStartDateTime = ZonedDateTime.of(startDateTime, LogonSession.getUserTimeZone());
-            zonedEndDateTime = ZonedDateTime.of(endDateTime, LogonSession.getUserTimeZone());
-            String loggedOnUserName = LogonSession.getLoggedOnUser().getUserName();
+            zonedStartDateTime = ZonedDateTime.of(startDateTime, LoginSession.getUserTimeZone());
+            zonedEndDateTime = ZonedDateTime.of(endDateTime, LoginSession.getUserTimeZone());
+            String loggedOnUserName = LoginSession.getLoginUser().getUserName();
 
             // Convert to UTC
             zonedStartDateTime = zonedStartDateTime.withZoneSameInstant(ZoneOffset.UTC);
@@ -358,7 +358,7 @@ public class ModifyAppointment implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        timeZoneLabel.setText(LogonSession.getUserTimeZone().toString());
+        timeZoneLabel.setText(LoginSession.getUserTimeZone().toString());
 
     }
 }

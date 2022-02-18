@@ -3,7 +3,7 @@ package model;
 import java.sql.Timestamp;
 
 /**
- * Appointment Class: Handles Appointments Objects
+ * Appointment Class: Manages Appointments Objects
  *
  * @author Hussein Coulibaly
  */
@@ -20,146 +20,110 @@ public class Appointment {
     private String createBy;
     private Timestamp lastUpdateDateTime;
     private String lastUpdateBy;
-    private Integer customerID;
-    private Integer userID;
-    private Integer contactID;
+    private int customerID;
+    private int userID;
+    private int contactID;
     private String contactName;
 
-    /**
-     * Appointment constructor for adding appointments
-     *
-     * @param inputAppointmentID Holds appointment ID (Primary Key).
-     * @param inputContactID Holds contact ID (Foreign Key).
-     * @param inputContactName Holds Name of contact.
-     * @param inputCreateBy Holds user's name who created the appointmen
-     * @param inputCreateDate Holds Date appointment was created.
-     * @param inputCustomerID Holds customer ID (Foreign Key).
-     * @param inputDescription Holds appointment description.
-     * @param inputEndDateTime Holds end date/time of appointment.
-     * @param inputLastUpdateBy Holds Last person to update the appointment.
-     * @param inputLastUpdateDateTime Holds Time/Date of last update.
-     * @param inputLocation Holds Appointment Location.
-     * @param inputStartDateTime Holds Start Date/time of app
-     * @param inputTitle Holds Appointment title
-     * @param inputType Holds Appointment Type
-     * @param inputUserID Holds User ID(Foreign Key).
-     *
-     */
 
-    /** Constructor to create list of the appointment /
-     *
-     * @param inputAppointmentID
-     * @param inputTitle
-     * @param inputDescription
-     * @param inputLocation
-     * @param inputType
-     * @param inputStartDateTime
-     * @param inputEndDateTime
-     * @param inputCreateDate
-     * @param inputCreateBy
-     * @param inputLastUpdateDateTime
-     * @param inputLastUpdateBy
-     * @param inputCustomerID
-     * @param inputUserID
-     * @param inputContactID
-     * @param inputContactName
-     */
-    public Appointment(Integer inputAppointmentID, String inputTitle, String inputDescription, String inputLocation,
-                       String inputType, Timestamp inputStartDateTime, Timestamp inputEndDateTime,
-                       Timestamp inputCreateDate, String inputCreateBy, Timestamp inputLastUpdateDateTime,
-                       String inputLastUpdateBy, Integer inputCustomerID, Integer inputUserID, Integer inputContactID,
-                       String inputContactName) {
+    public Appointment(Integer inAppointmentID, String inTitle, String inDescription, String inLocation,
+                       String inType, Timestamp inStartDateTime, Timestamp inEndDateTime,
+                       Timestamp inCreateDate, String inCreateBy, Timestamp inLastUpdateDateTime,
+                       String inLastUpdateBy, Integer inCustomerID, Integer inUserID, Integer inContactID,
+                       String inContactName) {
 
-        appointmentID = inputAppointmentID;
-        title = inputTitle;
-        description = inputDescription;
-        location = inputLocation;
-        type = inputType;
-        startDateTime = inputStartDateTime;
-        endDateTime = inputEndDateTime;
-        createDate = inputCreateDate;
-        createBy = inputCreateBy;
-        lastUpdateDateTime = inputLastUpdateDateTime;
-        lastUpdateBy = inputLastUpdateBy;
-        customerID = inputCustomerID;
-        userID = inputUserID;
-        contactID = inputContactID;
-        contactName = inputContactName;
+        appointmentID = inAppointmentID;
+        customerID = inCustomerID;
+        contactName = inContactName;
+        contactID = inContactID;
+        userID = inUserID;
+        title = inTitle;
+        description = inDescription;
+        location = inLocation;
+        type = inType;
+        startDateTime = inStartDateTime;
+        endDateTime = inEndDateTime;
+        createDate = inCreateDate;
+        createBy = inCreateBy;
+        lastUpdateDateTime = inLastUpdateDateTime;
+        lastUpdateBy = inLastUpdateBy;
+
+
 
     }
 
 
     public Integer getAppointmentID() {
-        return appointmentID;
+        return this.appointmentID;
     }
 
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
 
     public String getType() {
-        return  type;
+        return this.type;
     }
 
 
     public Timestamp getStartDateTime() {
-        return startDateTime;
+        return this.startDateTime;
     }
 
 
     public Timestamp getEndDateTime() {
-        return endDateTime;
+        return this.endDateTime;
     }
 
 
     public Timestamp getCreateDate() {
-        return createDate;
+        return this.createDate;
     }
 
 
     public String getCreateBy() {
-        return createBy;
+        return this.createBy;
     }
 
 
     public Timestamp getLastUpdateDateTime() {
-        return lastUpdateDateTime;
+        return this.lastUpdateDateTime;
     }
 
 
     public String getLastUpdateBy() {
-        return lastUpdateBy;
+        return this.lastUpdateBy;
     }
 
 
     public Integer getCustomerID() {
-        return customerID;
+        return this.customerID;
     }
 
 
     public Integer getUserID() {
-        return userID;
+        return this.userID;
     }
 
 
     public Integer getContactID() {
-        return contactID;
+        return this.contactID;
     }
 
 
     public String getContactName() {
-        return contactName;
+        return this.contactName;
     }
 }

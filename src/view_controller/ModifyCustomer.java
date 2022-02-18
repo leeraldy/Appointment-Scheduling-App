@@ -55,9 +55,9 @@ public class ModifyCustomer implements Initializable {
      */
     public void initData(Customer selectedCustomer) throws SQLException {
 
-        countryComboBox.setItems(CustomerDB.getAllCountries());
+        countryComboBox.setItems(CustomerDB.getAllCountriesList());
         countryComboBox.getSelectionModel().select(selectedCustomer.getCountry());
-        divisionComboBox.setItems(CustomerDB.getFilteredDivisions(selectedCustomer.getCountry()));
+        divisionComboBox.setItems(CustomerDB.getFilteredDivisionsView(selectedCustomer.getCountry()));
         divisionComboBox.getSelectionModel().select(selectedCustomer.getDivision());
 
         customerIDTextBox.setText(selectedCustomer.getCustomerID().toString());
@@ -69,13 +69,7 @@ public class ModifyCustomer implements Initializable {
 
     }
 
-    /**
-     * Populates new scene
-     *
-     * @param event Button Press
-     * @param switchPath path to new scene
-     * @throws IOException
-     */
+
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(switchPath));
         Scene scene = new Scene(parent);
@@ -84,13 +78,7 @@ public class ModifyCustomer implements Initializable {
         window.show();
     }
 
-    /**
-     * Validates inputs
-     *
-     * @param event Button Press
-     * @throws IOException
-     * @throws SQLException
-     */
+
     public void pressSaveButton(ActionEvent event) throws IOException, SQLException {
         // INPUT VALIDATION
         String country = countryComboBox.getValue();
@@ -142,22 +130,12 @@ public class ModifyCustomer implements Initializable {
         phoneTextBox.clear();
     }
 
-    /**
-     * Returns back to previous scene
-     *
-     * @param event Button Press
-     * @throws IOException
-     */
+
     public void pressBackButton(ActionEvent event) throws IOException {
         switchScreen(event, "/view_controller/CustomerScene.fxml");
     }
 
-    /**
-     * Populates scene
-     *
-     * @param url scene path
-     * @param resourceBundle resources
-     */
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -170,7 +148,7 @@ public class ModifyCustomer implements Initializable {
             else {
                 divisionComboBox.setDisable(false);
                 try {
-                    divisionComboBox.setItems(CustomerDB.getFilteredDivisions(countryComboBox.getValue()));
+                    divisionComboBox.setItems(CustomerDB.getFilteredDivisionsView(countryComboBox.getValue()));
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }

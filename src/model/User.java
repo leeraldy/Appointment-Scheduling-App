@@ -4,40 +4,29 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * User Class: Handles user objects
+ * User Class: Manages user objects
  *
  * @author Hussein Coulibaly
  */
 public class User {
+
+    // Contructor to create users
+
     private String userName;
-    private Integer userID;
+    private int userID;
 
-    /**
-     * User Constructor to create users
-     *
-     * @param inputUserName username
-     * @param inputUserId user ID
-     */
-    public User(String inputUserName,Integer inputUserId) {
-        userName = inputUserName;
-        userID = inputUserId;
+    public User(String inUserName,int inUserId) {
+        userName = inUserName;
+        userID = inUserId;
 
     }
 
-    /**
-     * Getter - user name
-     * @return username
-     */
     public String getUserName() {
-        return userName;
+        return this.userName;
     }
 
-    /**
-     * Getter - user ID
-     * @return user ID
-     */
     public Integer getUserID() {
-        return userID;
+        return this.userID;
     }
 
 }

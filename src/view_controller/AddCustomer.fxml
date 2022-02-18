@@ -15,7 +15,7 @@
                 <HBox prefHeight="38.0" prefWidth="284.0">
                     <children>
                         <Label prefHeight="17.0" prefWidth="71.0" text="Customer ID:" />
-                        <TextField fx:id="customerIDTextBox" disable="true" editable="false" prefHeight="25.0" prefWidth="197.0" />
+                        <TextField fx:id="customerIDTextField" disable="true" editable="false" prefHeight="25.0" prefWidth="197.0" />
                     </children>
                 </HBox>
                 <HBox prefHeight="38.0" prefWidth="284.0">
@@ -33,25 +33,25 @@
                 <HBox prefHeight="38.0" prefWidth="284.0">
                     <children>
                         <Label prefHeight="17.0" prefWidth="71.0" text="Name:" />
-                        <TextField fx:id="customerNameTextBox" prefHeight="25.0" prefWidth="197.0" />
+                        <TextField fx:id="customerNameTextField" prefHeight="25.0" prefWidth="197.0" />
                     </children>
                 </HBox>
                 <HBox prefHeight="38.0" prefWidth="284.0">
                     <children>
                         <Label prefHeight="17.0" prefWidth="71.0" text="Address:" />
-                        <TextField fx:id="addressTextBox" prefHeight="25.0" prefWidth="197.0" />
+                        <TextField fx:id="addressTextField" prefHeight="25.0" prefWidth="197.0" />
                     </children>
                 </HBox>
                 <HBox prefHeight="38.0" prefWidth="284.0">
                     <children>
                         <Label prefHeight="17.0" prefWidth="71.0" text="Postal Code:" />
-                        <TextField fx:id="postalCodeTextBox" prefHeight="25.0" prefWidth="197.0" />
+                        <TextField fx:id="postalCodeTextField" prefHeight="25.0" prefWidth="197.0" />
                     </children>
                 </HBox>
                 <HBox prefHeight="38.0" prefWidth="284.0">
                     <children>
                         <Label prefHeight="17.0" prefWidth="71.0" text="Phone:" />
-                        <TextField fx:id="phoneNumberTextBox" prefHeight="25.0" prefWidth="197.0" />
+                        <TextField fx:id="phoneNumberTextField" prefHeight="25.0" prefWidth="197.0" />
                     </children>
                 </HBox>
             </children>

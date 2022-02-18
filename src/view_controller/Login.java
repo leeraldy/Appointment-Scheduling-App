@@ -7,7 +7,9 @@ import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.stage.*;
 import model.Appointment;
-import model.LogonSession;
+import model.AppointmentDB;
+import model.LoginSession;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -22,15 +24,15 @@ import java.net.URL;
 
 /**
  *
- * Login Class: Handles the user login
+ * Login Class: Manages the user login
  *
  * @author Hussein Coulibaly
  */
 public class Login implements Initializable {
     @ FXML
-    private TextField passwordTextBox;
+    private TextField passwordTextField;
     @ FXML
-    private TextField userTextBox;
+    private TextField userTextField;
     @ FXML
     private Label titleLabel;
     @ FXML
@@ -46,11 +48,7 @@ public class Login implements Initializable {
     @ FXML
     private Label zoneLabel;
 
-    /**
-     * Lauches login screen
-     * @param event Button Press
-     * @param this pass routes path to new scene
-     */
+
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
 
         Parent parent = FXMLLoader.load(getClass().getResource(switchPath));
@@ -62,27 +60,22 @@ public class Login implements Initializable {
 
     }
 
-    /**
-     * Sets logins attempts
-     *
-     * @param event Button Press
-     * @throws IOException
-     */
+
     public void pressLogonButton(ActionEvent event) throws IOException, SQLException {
-        String userName = userTextBox.getText();
-        String password = passwordTextBox.getText();
+        String userName = userTextField.getText();
+        String password = passwordTextField.getText();
 
         // Attempt Login
-        boolean logon = LogonSession.attemptLogon(userName, password);
+        boolean logon = LoginSession.accessAttempt(userName, password);
 
         // Log Login attempt
-        Logger.auditLogin(userName, logon);
+        Logger.log(userName, logon);
 
         if (logon) {
 
 
             ObservableList<Appointment> upcomingAppts = FXCollections.observableArrayList();
-            for(Appointment a:model.AppointmentDB.getAllAppointments()) {
+            for(Appointment a: AppointmentDB.getAllAppointments()) {
                 if(a.getStartDateTime().toLocalDateTime().isAfter(LocalDateTime.now()) && a.getStartDateTime().toLocalDateTime().isBefore(LocalDateTime.now().plusMinutes(15)))
                 {
                     upcomingAppts.add(a);
@@ -127,14 +120,14 @@ public class Login implements Initializable {
      * @throws IOException
      */
     public void pressClearButton(ActionEvent event) throws IOException {
-        userTextBox.clear();
-        passwordTextBox.clear();
+        userTextField.clear();
+        passwordTextField.clear();
 
     }
 
 
     public void pressExitButton(ActionEvent event) throws IOException {
-        LogonSession.logOff();
+        LoginSession.SignOff();
         System.exit(0);
 
     }

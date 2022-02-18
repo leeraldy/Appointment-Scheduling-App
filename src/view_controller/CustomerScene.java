@@ -148,9 +148,9 @@ public class CustomerScene implements Initializable {
 
 
             if (result.get() == ButtonType.YES) {
-                Boolean customerApptSuccess = AppointmentDB.deleteCustomersAppointments(selectedCustomer.getCustomerID());
+                Boolean customerApptSuccess = AppointmentDB.cancelCustomersAppointments(selectedCustomer.getCustomerID());
 
-                Boolean customerSuccess = CustomerDB.deleteCustomer(selectedCustomer.getCustomerID());
+                Boolean customerSuccess = CustomerDB.removeCustomer(selectedCustomer.getCustomerID());
 
 
                 if (customerSuccess && customerApptSuccess) {
@@ -171,7 +171,7 @@ public class CustomerScene implements Initializable {
 
                 // Updates appointments on screen
                 try {
-                    populateCustomers(CustomerDB.getAllCustomers());
+                    populateCustomers(CustomerDB.getAllCustomersList());
                 }
                 catch (SQLException error){
                     error.printStackTrace();
@@ -206,7 +206,7 @@ public class CustomerScene implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         try {
-            populateCustomers(CustomerDB.getAllCustomers());
+            populateCustomers(CustomerDB.getAllCustomersList());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

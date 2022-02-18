@@ -10,248 +10,191 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * CustomerDB Class: Handles customers Objects in the Database
+ * CustomerDB Class: Manages customers Objects in the Database
  *
  * @author Hussein Coulibaly
  */
 public class CustomerDB {
 
-    /**
-     * Gets all customers inputs  from the database
-     *
-     * @param division division of customer
-     * @param name name of customer
-     * @param address address of the customer
-     * @param postalCode customer postal code
-     * @param phoneNum phone number of customer
-     * @param customerID customer ID
-     * @return returns Boolean displaying successful action
-     * @throws SQLException
-     */
+
     public static Boolean updateCustomer( String division, String name, String address,
                                           String postalCode, String phoneNum, Integer customerID) throws SQLException {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("UPDATE customers "
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("UPDATE customers "
                 + "SET Customer_Name=?, Address=?, Postal_Code=?, Phone=?, Last_Update=?," +
                 " Last_Updated_By=?, Division_ID=? WHERE Customer_ID = ?");
 
-        sqlCommand.setString(1, name);
-        sqlCommand.setString(2, address);
-        sqlCommand.setString(3, postalCode);
-        sqlCommand.setString(4, phoneNum);
-        sqlCommand.setString(5, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
-        sqlCommand.setString(6, LogonSession.getLoggedOnUser().getUserName());
-        sqlCommand.setInt(7, CustomerDB.getSpecificDivisionID(division));
-        sqlCommand.setInt(8, customerID);
+        ps.setString(1, name);
+        ps.setString(2, address);
+        ps.setString(3, postalCode);
+        ps.setString(4, phoneNum);
+        ps.setString(5, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(6, LoginSession.getLoginUser().getUserName());
+        ps.setInt(7, CustomerDB.obtainParticularDivisionID(division));
+        ps.setInt(8, customerID);
 
 
         try {
-            sqlCommand.executeUpdate();
-            sqlCommand.close();
+            ps.executeUpdate();
+            ps.close();
             return true;
         }
-        catch (SQLException e) {
+        catch (SQLException throwables) {
             //TODO- log error
-            e.printStackTrace();
-            sqlCommand.close();
+            throwables.printStackTrace();
+            ps.close();
             return false;
         }
 
     }
 
-    /**
-     * Deletes customer from DB
-     *
-     * @param customerID delete customer ID to
-     * @return returns Boolean to display successful action
-     * @throws SQLException
-     */
-    public static Boolean deleteCustomer(Integer customerID) throws SQLException {
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("DELETE FROM customers " +
+
+    public static Boolean removeCustomer(Integer customerID) throws SQLException {
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("DELETE FROM customers " +
                 "WHERE Customer_ID = ?");
 
-        sqlCommand.setInt(1, customerID);
+        ps.setInt(1, customerID);
 
         try {
-            sqlCommand.executeUpdate();
-            sqlCommand.close();
+            ps.executeUpdate();
+            ps.close();
             return true;
         }
-        catch (SQLException e) {
+        catch (SQLException throwables) {
             //TODO- log error
-            e.printStackTrace();
+            throwables.printStackTrace();
             return false;
         }
     }
 
-    /**
-     * Add customer to the Database
-     *
-     * @param country Country of customer
-     * @param division Division of customer
-     * @param name name of customer
-     * @param address address of customer
-     * @param postalCode postal code of customer
-     * @param phoneNum phone number of customer
-     * @param divisionID  division ID of customer
-     * @return retuns Boolean to display successful action
-     * @throws SQLException
-     */
+
     public static Boolean addCustomer(String country, String division, String name, String address, String postalCode,
                                       String phoneNum, Integer divisionID) throws SQLException {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement(
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement(
                 "INSERT INTO customers (Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, " +
                         "Last_Update, Last_Updated_By, Division_ID) \n" +
                         "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);");
 
-        sqlCommand.setString(1, name);
-        sqlCommand.setString(2, address);
-        sqlCommand.setString(3, postalCode);
-        sqlCommand.setString(4, phoneNum);
-        sqlCommand.setString(5, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
-        sqlCommand.setString(6, LogonSession.getLoggedOnUser().getUserName());
-        sqlCommand.setString(7, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
-        sqlCommand.setString(8, LogonSession.getLoggedOnUser().getUserName());
-        sqlCommand.setInt(9, divisionID);
+        ps.setString(1, name);
+        ps.setString(2, address);
+        ps.setString(3, postalCode);
+        ps.setString(4, phoneNum);
+        ps.setString(5, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(6, LoginSession.getLoginUser().getUserName());
+        ps.setString(7, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(8, LoginSession.getLoginUser().getUserName());
+        ps.setInt(9, divisionID);
 
 
         try {
-            sqlCommand.executeUpdate();
-            sqlCommand.close();
+            ps.executeUpdate();
+            ps.close();
             return true;
         }
-        catch (SQLException e) {
+        catch (SQLException throwables) {
             //TODO- log error
-            e.printStackTrace();
-            sqlCommand.close();
+            throwables.printStackTrace();
+            ps.close();
             return false;
         }
 
     }
 
-    /**
-     * Executes queries and  and retrieves the corresponding ID
-     *
-     * @param division ID for the division to be found
-     * @return Division ID
-     * @throws SQLException
-     */
-    public static Integer getSpecificDivisionID(String division) throws SQLException {
-        Integer divID = 0;
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("SELECT Division, Division_ID FROM " +
+
+    public static Integer obtainParticularDivisionID(String division) throws SQLException {
+        int divID = 0;
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("SELECT Division, Division_ID FROM " +
                 "first_level_divisions WHERE Division = ?");
 
-        sqlCommand.setString(1, division);
+        ps.setString(1, division);
 
-        ResultSet result = sqlCommand.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-        while ( result.next() ) {
-            divID = result.getInt("Division_ID");
+        while ( rs.next() ) {
+            divID = rs.getInt("Division_ID");
         }
 
-        sqlCommand.close();
+        ps.close();
         return divID;
 
     }
 
-    /**
-     * Retrieves all customer ID's to generates combo boxes
-     *
-     * @return customer ID's List
-     * @throws SQLException
-     */
+
     public static ObservableList<Integer> getAllCustomerID() throws SQLException {
 
         ObservableList<Integer> allCustomerID = FXCollections.observableArrayList();
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("SELECT DISTINCT Customer_ID" +
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("SELECT DISTINCT Customer_ID" +
                 " FROM customers;");
-        ResultSet results = sqlCommand.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-        while ( results.next() ) {
-            allCustomerID.add(results.getInt("Customer_ID"));
+        while ( rs.next() ) {
+            allCustomerID.add(rs.getInt("Customer_ID"));
         }
-        sqlCommand.close();
+        ps.close();
         return allCustomerID;
     }
 
-    /**
-     * getFilteredDivisions
-     * Gets the country and matches first level divisions
-     *
-     * @param inputCountry the corresponding divisions to retrieve the input entered
-     * @return list of all corresponding first level divisions
-     * @throws SQLException
-     */
-    public static ObservableList<String> getFilteredDivisions(String inputCountry) throws SQLException {
+
+    public static ObservableList<String> getFilteredDivisionsView(String inCountry) throws SQLException {
 
         ObservableList<String> filteredDivs = FXCollections.observableArrayList();
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement(
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement(
                 "SELECT c.Country, c.Country_ID,  d.Division_ID, d.Division FROM countries as c RIGHT OUTER JOIN " +
                         "first_level_divisions AS d ON c.Country_ID = d.Country_ID WHERE c.Country = ?");
 
-        sqlCommand.setString(1, inputCountry);
-        ResultSet results = sqlCommand.executeQuery();
+        ps.setString(1, inCountry);
+        ResultSet rs = ps.executeQuery();
 
-        while (results.next()) {
-            filteredDivs.add(results.getString("Division"));
+        while (rs.next()) {
+            filteredDivs.add(rs.getString("Division"));
         }
 
-        sqlCommand.close();
+        ps.close();
         return filteredDivs;
 
     }
 
-    /**
-     * Gets all queries from the Database to pull all countries
-     *
-     * @return countries list
-     * @throws SQLException
-     */
-    public static ObservableList<String> getAllCountries() throws SQLException {
+
+    public static ObservableList<String> getAllCountriesList() throws SQLException {
 
         ObservableList<String> allCountries = FXCollections.observableArrayList();
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("SELECT DISTINCT Country FROM countries");
-        ResultSet results = sqlCommand.executeQuery();
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("SELECT DISTINCT Country FROM countries");
+        ResultSet results = ps.executeQuery();
 
         while (results.next()) {
             allCountries.add(results.getString("Country"));
         }
-        sqlCommand.close();
+        ps.close();
         return allCountries;
 
     }
 
-    /**
-     * Gets from the Database all queries DB and pull all customers
-     *
-     * @return Customers list
-     * @throws SQLException
-     */
-    public static ObservableList<Customer> getAllCustomers() throws SQLException {
-        // Prepare SQL and execute query
+
+    public static ObservableList<Customer> getAllCustomersList() throws SQLException {
+
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement(
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement(
                 "SELECT cx.Customer_ID, cx.Customer_Name, cx.Address, cx.Postal_Code, cx.Phone, cx.Division_ID, " +
                         "f.Division, f.COUNTRY_ID, co.Country FROM customers as cx INNER JOIN first_level_divisions " +
                         "as f on cx.Division_ID = f.Division_ID INNER JOIN countries as co ON f.COUNTRY_ID = co.Country_ID");
-        ResultSet results = sqlCommand.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
 
-        while( results.next() ) {
+        while( rs.next() ) {
 
-            Integer custID = results.getInt("Customer_ID");
-            String custName = results.getString("Customer_Name");
-            String custAddress = results.getString("Address");
-            String custPostalCode = results.getString("Postal_Code");
-            String custPhoneNum = results.getString("Phone");
-            String custDivision = results.getString("Division");
-            Integer divID = results.getInt("Division_ID");
-            String custCountry = results.getString("Country");
+            Integer custID = rs.getInt("Customer_ID");
+            String custName = rs.getString("Customer_Name");
+            String custAddress = rs.getString("Address");
+            String custPostalCode = rs.getString("Postal_Code");
+            String custPhoneNum = rs.getString("Phone");
+            String custDivision = rs.getString("Division");
+            Integer divID = rs.getInt("Division_ID");
+            String custCountry = rs.getString("Country");
 
 
             Customer newCust = new Customer(custID, custName, custAddress, custPostalCode, custPhoneNum, custDivision,
@@ -261,7 +204,7 @@ public class CustomerDB {
             allCustomers.add(newCust);
 
         }
-        sqlCommand.close();
+        ps.close();
         return allCustomers;
 
     }

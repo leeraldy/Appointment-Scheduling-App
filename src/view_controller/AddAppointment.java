@@ -32,15 +32,15 @@ import java.util.ResourceBundle;
 public class AddAppointment implements Initializable {
 
     @FXML
-    TextField titleTextBox;
+    TextField titleTextField;
     @FXML
-    TextArea descriptionTextBox;
+    TextArea descriptionTextField;
     @FXML
-    TextField locationTextBox;
+    TextField locationTextField;
     @ FXML
     ComboBox<String> contactComboBox;
     @ FXML
-    TextField typeTextBox;
+    TextField typeTextField;
     @ FXML
     ComboBox<Integer> customerComboBox;
     @ FXML
@@ -60,10 +60,7 @@ public class AddAppointment implements Initializable {
     @ FXML
     Button backButton;
 
-    /*
-     * @param event Button Press
-     * @param switchPath path to new screen
-     */
+
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(switchPath));
         Scene scene = new Scene(parent);
@@ -85,11 +82,11 @@ public class AddAppointment implements Initializable {
         String errorMessage = "";
 
 
-        String title = titleTextBox.getText();
-        String description = descriptionTextBox.getText();
-        String location = locationTextBox.getText();
+        String title = titleTextField.getText();
+        String description = descriptionTextField.getText();
+        String location = locationTextField.getText();
         String contactName = contactComboBox.getValue();
-        String type = typeTextBox.getText();
+        String type = typeTextField.getText();
         Integer customerID = customerComboBox.getValue();
         Integer userID = userComboBox.getValue();
         LocalDate apptDate = apptDatePicker.getValue();
@@ -98,8 +95,7 @@ public class AddAppointment implements Initializable {
         ZonedDateTime zonedEndDateTime = null;
         ZonedDateTime zonedStartDateTime = null;
 
-        Integer contactID = ContactDB.findContactID(contactName);
-
+        int contactID = ContactDB.obtainContactID(contactName);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -137,7 +133,6 @@ public class AddAppointment implements Initializable {
 
         }
 
-        // INPUT VALIDATION: validates business hours if valid.
         validBusinessHours = validateBusinessHours(startDateTime, endDateTime, apptDate);
         validOverlap = validateCustomerOverlap(customerID, startDateTime, endDateTime, apptDate);
 
@@ -159,9 +154,9 @@ public class AddAppointment implements Initializable {
         }
         else {
 
-            zonedStartDateTime = ZonedDateTime.of(startDateTime, LogonSession.getUserTimeZone());
-            zonedEndDateTime = ZonedDateTime.of(endDateTime, LogonSession.getUserTimeZone());
-            String loggedOnUserName = LogonSession.getLoggedOnUser().getUserName();
+            zonedStartDateTime = ZonedDateTime.of(startDateTime, LoginSession.getUserTimeZone());
+            zonedEndDateTime = ZonedDateTime.of(endDateTime, LoginSession.getUserTimeZone());
+            String loggedOnUserName = LoginSession.getLoginUser().getUserName();
 
             // Convert to UTC
             zonedStartDateTime = zonedStartDateTime.withZoneSameInstant(ZoneOffset.UTC);
@@ -189,10 +184,10 @@ public class AddAppointment implements Initializable {
     }
 
     public void pressClearButton() {
-        titleTextBox.clear();
-        descriptionTextBox.clear();
-        locationTextBox.clear();
-        typeTextBox.clear();
+        titleTextField.clear();
+        descriptionTextField.clear();
+        locationTextField.clear();
+        typeTextField.clear();
         startTimeTextBox.clear();
         endTimeTextBox.clear();
         contactComboBox.getSelectionModel().clearSelection();
@@ -214,26 +209,19 @@ public class AddAppointment implements Initializable {
 
     }
 
-    /**
-     * Accepts only appointments made within business hours
-     *
-     * @param startDateTime appointment datetime is started
-     * @param endDateTime  appointment datetime ended
-     * @param apptDate appointment date
-     * @return returns Boolean showing valid input
-     */
+
     public Boolean validateBusinessHours(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDate apptDate) {
         // (8am to 10pm EST, Not including weekends)
 
-        ZonedDateTime startZonedDateTime = ZonedDateTime.of(startDateTime, LogonSession.getUserTimeZone());
-        ZonedDateTime endZonedDateTime = ZonedDateTime.of(endDateTime, LogonSession.getUserTimeZone());
+        ZonedDateTime startZonedDateTime = ZonedDateTime.of(startDateTime, LoginSession.getUserTimeZone());
+        ZonedDateTime endZonedDateTime = ZonedDateTime.of(endDateTime, LoginSession.getUserTimeZone());
 
         ZonedDateTime startBusinessHours = ZonedDateTime.of(apptDate, LocalTime.of(8,00),
                 ZoneId.of("America/New_York"));
         ZonedDateTime endBusinessHours = ZonedDateTime.of(apptDate, LocalTime.of(22, 00),
                 ZoneId.of("America/New_York"));
 
-        // Validates all the business hours and update time accordingly
+
 
         if (startZonedDateTime.isBefore(startBusinessHours) | startZonedDateTime.isAfter(endBusinessHours) |
                 endZonedDateTime.isBefore(startBusinessHours) | endZonedDateTime.isAfter(endBusinessHours) |
@@ -247,21 +235,12 @@ public class AddAppointment implements Initializable {
 
     }
 
-    /**
-     * Ensure no overlapping appointments are accepted
-     *
-     * @param inputCustomerID appointment of customer ID
-     * @param startDateTime appointment start datetime
-     * @param endDateTime appointment end datetime
-     * @param apptDate appointment date
 
-     * @return returns Boolean displaying valid input inserted
-     */
     public Boolean validateCustomerOverlap(Integer inputCustomerID, LocalDateTime startDateTime,
                                            LocalDateTime endDateTime, LocalDate apptDate) throws SQLException {
 
         // Get list of appointments that might have conflicts
-        ObservableList<Appointment> possibleConflicts = AppointmentDB.getCustomerFilteredAppointments(apptDate,
+        ObservableList<Appointment> possibleConflicts = AppointmentDB.getAppointmentsFilteredByCustomer(apptDate,
                 inputCustomerID);
         // Removes any conflicting appointments with the existing one
 
@@ -293,14 +272,10 @@ public class AddAppointment implements Initializable {
 
     }
 
-    /**
-     * This Lambda expression - All the past dates are bared to be selected
-     * @param location Scene path
-     * @param resources resources
-     */
+
     public void initialize(URL location, ResourceBundle resources) {
 
-        timeZoneTag.setText("Your Time Zone:" + LogonSession.getUserTimeZone());
+        timeZoneTag.setText("Your Time Zone:" + LoginSession.getUserTimeZone());
 
         //Lambda Expression
 
@@ -309,8 +284,14 @@ public class AddAppointment implements Initializable {
             public void updateItem(LocalDate apptDatePicker, boolean empty) {
                 super.updateItem(apptDatePicker, empty);
                 setDisable(
-                        empty || apptDatePicker.getDayOfWeek() == DayOfWeek.SATURDAY ||
-                                apptDatePicker.getDayOfWeek() == DayOfWeek.SUNDAY || apptDatePicker.isBefore(LocalDate.now()));
+                        empty ||
+                                apptDatePicker.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                                apptDatePicker.getDayOfWeek() == DayOfWeek.SUNDAY ||
+                                apptDatePicker.isBefore(LocalDate.now()));
+                if(apptDatePicker.getDayOfWeek() == DayOfWeek.SATURDAY || apptDatePicker.getDayOfWeek() == DayOfWeek.SUNDAY ||
+                apptDatePicker.isBefore(apptDatePicker.now())) {
+                    setStyle("#8c8181");
+                }
             }
         });
 
@@ -318,7 +299,7 @@ public class AddAppointment implements Initializable {
         try {
             customerComboBox.setItems(CustomerDB.getAllCustomerID());
             userComboBox.setItems(UserDB.getAllUserID());
-            contactComboBox.setItems(ContactDB.getAllContactName());
+            contactComboBox.setItems(ContactDB.getAllContactByName());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

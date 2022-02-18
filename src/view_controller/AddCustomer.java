@@ -23,19 +23,19 @@ import java.util.ResourceBundle;
  */
 public class AddCustomer implements Initializable {
     @FXML
-    TextField customerIDTextBox;
+    TextField customerIDTextField;
     @FXML
     ComboBox<String> countryComboBox;
     @FXML
     ComboBox<String> divisionComboBox;
     @FXML
-    TextField customerNameTextBox;
+    TextField customerNameTextField;
     @FXML
-    TextField addressTextBox;
+    TextField addressTextField;
     @FXML
-    TextField postalCodeTextBox;
+    TextField postalCodeTextField;
     @FXML
-    TextField phoneNumberTextBox;
+    TextField phoneNumberTextField;
     @FXML
     Button saveButton;
     @FXML
@@ -43,13 +43,8 @@ public class AddCustomer implements Initializable {
     @FXML
     Button backButton;
 
-    /**
-     * Sets initial scene to add customers
-     *
-     * @param event button press
-     * @param switchPath path to new scene
-     * @throws IOException
-     */
+
+
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
         Parent parent = FXMLLoader.load(getClass().getResource(switchPath));
         Scene scene = new Scene(parent);
@@ -58,21 +53,15 @@ public class AddCustomer implements Initializable {
         window.show();
     }
 
-    /**
-     * Validates inputs entered
-     *
-     * @param event Button press
-     * @throws SQLException
-     * @throws IOException
-     */
+
     public void pressSaveButton(ActionEvent event) throws SQLException, IOException {
         // INPUT VALIDATION - if no nulls found
         String country = countryComboBox.getValue();
         String division = divisionComboBox.getValue();
-        String name = customerNameTextBox.getText();
-        String address = addressTextBox.getText();
-        String postalCode = postalCodeTextBox.getText();
-        String phone = phoneNumberTextBox.getText();
+        String name = customerNameTextField.getText();
+        String address = addressTextField.getText();
+        String postalCode = postalCodeTextField.getText();
+        String phone = phoneNumberTextField.getText();
 
         if (country.isBlank() || division.isBlank() || name.isBlank() || address.isBlank() || postalCode.isBlank() ||
                 phone.isBlank()) {
@@ -87,7 +76,7 @@ public class AddCustomer implements Initializable {
 
         // Add new customer to Database
         Boolean success = CustomerDB.addCustomer(country, division, name, address, postalCode, phone,
-                CustomerDB.getSpecificDivisionID(division));
+                CustomerDB.obtainParticularDivisionID(division));
 
         // Generates successfully added message, if no error found.
         if (success) {
@@ -106,41 +95,28 @@ public class AddCustomer implements Initializable {
 
     }
 
-    /**
-     * Removes fields on scene when clicked
-     *
-     * @param event Button Click
-     */
+
     public void pressClearButton(ActionEvent event) {
         countryComboBox.getItems().clear();
         divisionComboBox.getItems().clear();
-        customerNameTextBox.clear();
-        addressTextBox.clear();
-        postalCodeTextBox.clear();
-        phoneNumberTextBox.clear();
+        customerNameTextField.clear();
+        addressTextField.clear();
+        postalCodeTextField.clear();
+        phoneNumberTextField.clear();
 
     }
 
-    /**
-     * Return back to previous screen
-     * @param event Button Click
-     */
+
     public void pressBackButton(ActionEvent event) throws IOException {
         switchScreen(event, "/view_controller/CustomerScene.fxml");
 
     }
 
 
-    /**
-     * Lambda expression - creates a listener for changes in a ComboBox
-     *
-     * @param url path of scene
-     * @param resourceBundle locates the root object
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            countryComboBox.setItems(CustomerDB.getAllCountries());
+            countryComboBox.setItems(CustomerDB.getAllCountriesList());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -155,7 +131,7 @@ public class AddCustomer implements Initializable {
             else {
                 divisionComboBox.setDisable(false);
                 try {
-                    divisionComboBox.setItems(CustomerDB.getFilteredDivisions(countryComboBox.getValue()));
+                    divisionComboBox.setItems(CustomerDB.getFilteredDivisionsView(countryComboBox.getValue()));
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }

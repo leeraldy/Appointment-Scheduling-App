@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 /**
- * DBConnection Class: Handles SqlDatabase connection
+ * DBConnection Class: Manages SqlDatabase connection
  *
  * @author Hussein Coulibaly
  */
@@ -18,38 +18,34 @@ public class DBConnection {
     private static String dbName = "client_schedule";
     private static String jdbcUrl = protocol + vendor + location + dbName + "?connectionTimeZone = SERVER"; //LOCAL
     private static final String driver = "com.mysql.cj.jdbc.Driver"; // Driver reference
+
     private static String userName = "sqlUser"; //Username
     private static String password = "Passw0rd!"; //Password
-    private static Connection cursor;
+    private static Connection conn;
 
-    /**
-     * Manages the database connection
-     */
+
     public DBConnection() { };
 
     // Driver reference Jdbc
 
-    public static void setJdbcUrl(String jdbcUrlInput) {
-        jdbcUrl = jdbcUrlInput;
+    public static void setJdbcUrl(String jdbcUrlInsert) {
+        jdbcUrl = jdbcUrlInsert;
     }
 
     // Database name
-    public static void setDbName(String dbNameInput) {
-        dbName = dbNameInput;
+    public static void setDbName(String dbNameInsert) {
+        dbName = dbNameInsert;
     }
 
 
      //username
 
-    public static void setUserName(String userNameInput) {
-        userName = userNameInput;
+    public static void setUserName(String userNameInsert) {
+        userName = userNameInsert;
     }
 
-    /**
-     * password
-     */
-    public static void setPassword(String passwordInput) {
-        password = passwordInput;
+
+    public static void setPassword(String passwordInsert) { password = passwordInsert;
     }
 
     /**
@@ -58,7 +54,7 @@ public class DBConnection {
     public static void connectDB() {
         try {
             Class.forName(driver);
-            cursor = DriverManager.getConnection(jdbcUrl, userName, password);
+            conn = DriverManager.getConnection(jdbcUrl, userName, password);
 
         }
         catch (SQLException error) {
@@ -71,8 +67,8 @@ public class DBConnection {
     }
 
 
-     //@return returns Database object - dbcurso
-    public static Connection dbCursor() {
-        return cursor;
+    public static Connection dbConn() {
+
+        return conn;
     }
 }

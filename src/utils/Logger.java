@@ -7,27 +7,20 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 /**
- * Logger Class: Handles anything that needs to be put in the log.
+ * Logger Class: Manages anything that needs to be put in the log.
  *
  * @author Hussein Coulibaly
  */
 public class Logger {
 
-    private static final String logPath = "login_activity.txt";
+    private static final String FILENAME = "log.txt";
 
-    /**
-     * Retains all Log of user log in activity in the text file format
-     *
-     * @param userName userName of logged user
-     * @param successBool returns Boolean to show successful log in
-     * @throws IOException
-     */
-    public static void auditLogin(String userName, Boolean successBool) throws IOException {
+    public static void log(String userName, Boolean success) {
         try {
 
-            BufferedWriter logger = new BufferedWriter(new FileWriter(logPath, true));
-            logger.append(ZonedDateTime.now(ZoneOffset.UTC).toString() + " UTC-LOGIN ATTEMPT-USERNAME: " + userName +
-                    " LOGIN SUCCESSFUL: " + successBool.toString() + "\n");
+            BufferedWriter logger = new BufferedWriter(new FileWriter(FILENAME, true));
+            logger.append(ZonedDateTime.now(ZoneOffset.UTC).toString() + " UTC-LOGIN ATTEMPT: " + userName +
+                    " LOGIN SUCCESSFUL: " + success.toString() + "\n");
             logger.flush();
             logger.close();
         }

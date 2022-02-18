@@ -11,62 +11,50 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
- * ContactDB Class: Handles all the contact in Database
+ * ContactDB Class: Manages all the contact in Database
  *
  * @author Hussein Coulibaly
  */
 public class ContactDB {
 
-    /**
-     * Gets the total sum of minutes for all appointments from a specific contact
-     *
-     * @param contactID Contact ID to find the total sum
-     * @return returns the total sum of number of minutes scheduled
-     * @throws SQLException
-     */
-    public static Integer getMinutesScheduled(String contactID) throws SQLException {
+    // Pulls all contact from the Database
+    public static Integer getMinutesTimetable(String contactID) throws SQLException {
 
-        Integer totalMins = 0;
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement(
+        int allCombinedMins = 0;
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement(
                 "SELECT * FROM appointments WHERE Contact_ID = ?");
 
-        sqlCommand.setString(1, contactID);
+        ps.setString(1, contactID);
 
-        ResultSet results = sqlCommand.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-        while ( results.next() ) {
-            LocalDateTime startDateTime = results.getTimestamp("Start").toLocalDateTime();
-            LocalDateTime endDateTime = results.getTimestamp("End").toLocalDateTime();
-            totalMins += (int)Duration.between(startDateTime, endDateTime).toMinutes();
+        while ( rs.next() ) {
+            LocalDateTime startDateTime = rs.getTimestamp("Start").toLocalDateTime();
+            LocalDateTime endDateTime = rs.getTimestamp("End").toLocalDateTime();
+            allCombinedMins += (int)Duration.between(startDateTime, endDateTime).toMinutes();
         }
 
-        sqlCommand.close();
-        return totalMins;
+        ps.close();
+        return allCombinedMins;
     }
 
-    /**
-     * Gets all appointments from a specific contact
-     *
-     * @param contactID Contact ID to retrieve appointments
-     * @return returns ObservableList of all appointments from a specific contact
-     * @throws SQLException
-     */
+
     public static ObservableList<String> getContactAppts(String contactID) throws SQLException {
         ObservableList<String> apptStr = FXCollections.observableArrayList();
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement(
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement(
                 "SELECT * FROM appointments WHERE Contact_ID = ?");
 
-        sqlCommand.setString(1, contactID);
+        ps.setString(1, contactID);
 
-        ResultSet results = sqlCommand.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-        while ( results.next()) {
-            String apptID = results.getString("Appointment_ID");
-            String title = results.getString("Title");
-            String type = results.getString("Type");
-            String start = results.getString("Start");
-            String end = results.getString("End");
-            String customerID = results.getString("Customer_ID");
+        while ( rs.next()) {
+            String apptID = rs.getString("Appointment_ID");
+            String title = rs.getString("Title");
+            String type = rs.getString("Type");
+            String start = rs.getString("Start");
+            String end = rs.getString("End");
+            String customerID = rs.getString("Customer_ID");
 
             String newLine = "  AppointmentID: " + apptID + "\n";
             newLine += "        Title: " + title + "\n";
@@ -79,50 +67,38 @@ public class ContactDB {
 
         }
 
-        sqlCommand.close();
+        ps.close();
         return apptStr;
 
     }
 
-    /**
-     * Retrieves all contacts name
-     *
-     * @return returns Observablelist of all contact names
-     * @throws SQLException
-     */
-    public static ObservableList<String> getAllContactName() throws SQLException {
-        ObservableList<String> allContactName = FXCollections.observableArrayList();
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("SELECT DISTINCT Contact_Name" +
-                " FROM contacts;");
-        ResultSet results = sqlCommand.executeQuery();
 
-        while ( results.next() ) {
-            allContactName.add(results.getString("Contact_Name"));
+    public static ObservableList<String> getAllContactByName() throws SQLException {
+        ObservableList<String> allContactName = FXCollections.observableArrayList();
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("SELECT DISTINCT Contact_Name" +
+                " FROM contacts;");
+        ResultSet rs = ps.executeQuery();
+
+        while ( rs.next() ) {
+            allContactName.add(rs.getString("Contact_Name"));
         }
-        sqlCommand.close();
+        ps.close();
         return allContactName;
     }
 
-    /**
-     * findContactID
-     * Gets the contact name and associates the ID to all other operations to that contact
-     *
-     * @param contactName contact name of the ID that has been searched
-     * @return returns a Contact ID that corresponds
-     * @throws SQLException
-     */
-    public static Integer findContactID(String contactName) throws SQLException {
 
-        Integer contactID = -1;
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("SELECT Contact_ID, Contact_Name " +
+    public static Integer obtainContactID(String contactName) throws SQLException {
+
+        int contactID = -1;
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("SELECT Contact_ID, Contact_Name " +
                 "FROM contacts WHERE Contact_Name = ?");
-        sqlCommand.setString(1, contactName);
-        ResultSet results = sqlCommand.executeQuery();
+        ps.setString(1, contactName);
+        ResultSet rs = ps.executeQuery();
 
-        while (results.next()) {
-            contactID = results.getInt("Contact_ID");
+        while (rs.next()) {
+            contactID = rs.getInt("Contact_ID");
         }
-        sqlCommand.close();
+        ps.close();
         return contactID;
 
 

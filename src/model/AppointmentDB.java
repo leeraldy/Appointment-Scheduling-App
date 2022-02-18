@@ -12,370 +12,304 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * AppointmentDB Class: Handles all the SQL queries in Database
+ * AppointmentDB Class: Manages all the SQL queries in Database
  *
  * @author Hussein Coulibaly
  */
 public class AppointmentDB {
 
-    /**
-     * Gets all the appointment from the DB
-     *
-     *
-     * @param startRange start of range ZonedDateTime
-     * @param endRange end of range ZonedDateTime
-     * @return Filters all appointments based on an entered start and end date.
-     * @throws SQLException
-     */
-    public static ObservableList<Appointment> getDateFilteredAppointments(ZonedDateTime startRange, ZonedDateTime endRange)
+    // Pulls all the appointments from the database
+
+    public static ObservableList<Appointment> getAllDateFilteredAppointmentsView(ZonedDateTime startSpan, ZonedDateTime endSpan)
             throws SQLException {
 
-        ObservableList<Appointment> filteredAppts = FXCollections.observableArrayList();
+        ObservableList<Appointment> filteredApptsList = FXCollections.observableArrayList();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement(
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement(
+                //"SELECT * FROM Appointmemnts WHERE Contact_ID BETWEEN" + "start in ? and ?"
                 "SELECT * FROM appointments as a LEFT OUTER JOIN contacts as c ON a.Contact_ID = c.Contact_ID WHERE" +
                         " Start between ? AND ?"
         );
 
-        String startRangeString = startRange.format(formatter);
-        String endRangeString = endRange.format(formatter);
+        String startSpanString = startSpan.format(formatter);
+        String endSpanString = endSpan.format(formatter);
 
-        sqlCommand.setString(1, startRangeString);
-        sqlCommand.setString(2, endRangeString);
+        ps.setString(1, startSpanString);
+        ps.setString(2, endSpanString);
 
-        ResultSet results = sqlCommand.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-        while( results.next() ) {
+        while( rs.next() ) {
 
-            Integer appointmentID = results.getInt("Appointment_ID");
-            String title = results.getString("Title");
-            String description = results.getString("Description");
-            String location = results.getString("Location");
-            String type = results.getString("Type");
-            Timestamp startDateTime = results.getTimestamp("Start");
-            Timestamp endDateTime = results.getTimestamp("End");
-            Timestamp createdDate = results.getTimestamp("Create_Date");
-            String createdBy = results.getString("Created_by");
-            Timestamp lastUpdateDateTime = results.getTimestamp("Last_Update");
-            String lastUpdatedBy = results.getString("Last_Updated_By");
-            Integer customerID = results.getInt("Customer_ID");
-            Integer userID = results.getInt("User_ID");
-            Integer contactID = results.getInt("Contact_ID");
-            String contactName = results.getString("Contact_Name");
+            int apptID = rs.getInt("Appointment_ID");
+            String apptTitle = rs.getString("Title");
+            String apptDescription = rs.getString("Description");
+            String apptLocation = rs.getString("Location");
+            String apptType = rs.getString("Type");
+            Timestamp start = rs.getTimestamp("Start");
+            Timestamp end = rs.getTimestamp("End");
+            Timestamp apptCreateDate = rs.getTimestamp("Create_Date");
+            String apptCreateBy = rs.getString("Create_by");
+            Timestamp apptLastUpdateDateTime = rs.getTimestamp("Last_Update");
+            String apptLastUpdateBy = rs.getString("Last_Update_By");
+            int apptCustomerID = rs.getInt("Customer_ID");
+            int apptUserID = rs.getInt("User_ID");
+            int apptContactID = rs.getInt("Contact_ID");
+            String apptContactName = rs.getString("Contact_Name");
 
             Appointment newAppt = new Appointment(
-                    appointmentID, title, description, location, type, startDateTime, endDateTime, createdDate,
-                    createdBy, lastUpdateDateTime, lastUpdatedBy, customerID, userID, contactID, contactName
+                    apptID, apptTitle, apptDescription, apptLocation, apptType, start, end, apptCreateDate,
+                    apptCreateBy, apptLastUpdateDateTime, apptLastUpdateBy, apptCustomerID, apptUserID, apptContactID, apptContactName
             );
-            filteredAppts.add(newAppt);
+            filteredApptsList.add(newAppt);
         }
 
-        sqlCommand.close();
-        return filteredAppts;
+
+        ps.close();
+        return filteredApptsList;
 
     }
 
-    /**
-     * Gets all SQL queries from the database and total the number of appointments for report purposes.
-     *
-     * @return retuns an ObservableList to generate in the report.
-     * @throws SQLException
-     */
-    public static ObservableList<String> reportTotalsByTypeAndMonth() throws SQLException {
-        ObservableList<String> reportStrings = FXCollections.observableArrayList();
 
-        reportStrings.add("Total Number of Appointments by type and month:\n");
+    public static ObservableList<String> monthlyReviewTypeAndMonth() throws SQLException {
+        ObservableList<String> reviewStrings = FXCollections.observableArrayList();
 
-        PreparedStatement typeSqlCommand = DBConnection.dbCursor().prepareStatement(
+        reviewStrings.add("The Total Number of Appointments by type and month:\n");
+
+        PreparedStatement typePs = DBConnection.dbConn().prepareStatement(
                 "SELECT Type, COUNT(Type) as \"Total\" FROM appointments GROUP BY Type");
 
-        PreparedStatement monthSqlCommand = DBConnection.dbCursor().prepareStatement(
+        PreparedStatement monthPs = DBConnection.dbConn().prepareStatement(
                 "SELECT MONTHNAME(Start) as \"Month\", COUNT(MONTH(Start)) as \"Total\" from appointments GROUP BY Month");
 
-        ResultSet typeResults = typeSqlCommand.executeQuery();
-        ResultSet monthResults = monthSqlCommand.executeQuery();
+        ResultSet typeResults = typePs.executeQuery();
+        ResultSet monthResults = monthPs.executeQuery();
 
         while (typeResults.next()) {
             String typeStr = "Type: " + typeResults.getString("Type") + " Count: " +
                     typeResults.getString("Total") + "\n";
-            reportStrings.add(typeStr);
+            reviewStrings.add(typeStr);
 
         }
 
         while (monthResults.next()) {
             String monthStr = "Month: " + monthResults.getString("Month") + " Count: " +
                     monthResults.getString("Total") + "\n";
-            reportStrings.add(monthStr);
+            reviewStrings.add(monthStr);
 
         }
 
-        monthSqlCommand.close();
-        typeSqlCommand.close();
+        monthPs.close();
+        typePs.close();
 
-        return reportStrings;
+        return reviewStrings;
 
     }
 
-    /**
-     * Gets all SQL queries from all appointments to verify for any conflicts.
-     *
-     * @param apptDate All possible appointments date
-     * @param inputCustomerID Researches for any customer ID
-     * @return returns an ObservableList for a specific customer appointment
-     * @throws SQLException
-     */
-    public static ObservableList<Appointment> getCustomerFilteredAppointments(
+
+    public static ObservableList<Appointment> getAppointmentsFilteredByCustomer(
             LocalDate apptDate, Integer inputCustomerID) throws SQLException {
 
-        ObservableList<Appointment> filteredAppts = FXCollections.observableArrayList();
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement(
+        ObservableList<Appointment> filteredApptsList = FXCollections.observableArrayList();
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement(
                 "SELECT * FROM appointments as a LEFT OUTER JOIN contacts as c " +
                         "ON a.Contact_ID = c.Contact_ID WHERE datediff(a.Start, ?) = 0 AND Customer_ID = ?;"
         );
 
-        sqlCommand.setInt(2, inputCustomerID);
+        ps.setInt(2, inputCustomerID);
 
-        sqlCommand.setString(1, apptDate.toString());
+        ps.setString(1, apptDate.toString());
 
-        ResultSet results = sqlCommand.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-        while( results.next() ) {
-            // get data from the returned rows
-            Integer appointmentID = results.getInt("Appointment_ID");
-            String title = results.getString("Title");
-            String description = results.getString("Description");
-            String location = results.getString("Location");
-            String type = results.getString("Type");
-            Timestamp startDateTime = results.getTimestamp("Start");
-            Timestamp endDateTime = results.getTimestamp("End");
-            Timestamp createdDate = results.getTimestamp("Create_Date");
-            String createdBy = results.getString("Created_by");
-            Timestamp lastUpdateDateTime = results.getTimestamp("Last_Update");
-            String lastUpdatedBy = results.getString("Last_Updated_By");
-            Integer customerID = results.getInt("Customer_ID");
-            Integer userID = results.getInt("User_ID");
-            Integer contactID = results.getInt("Contact_ID");
-            String contactName = results.getString("Contact_Name");
+        while( rs.next() ) {
+
+            int appointmentID = rs.getInt("Appointment_ID");
+            String title = rs.getString("Title");
+            String description = rs.getString("Description");
+            String location = rs.getString("Location");
+            String type = rs.getString("Type");
+            Timestamp startDateTime = rs.getTimestamp("Start");
+            Timestamp endDateTime = rs.getTimestamp("End");
+            Timestamp createdDate = rs.getTimestamp("Create_Date");
+            String createdBy = rs.getString("Created_by");
+            Timestamp lastUpdateDateTime = rs.getTimestamp("Last_Update");
+            String lastUpdatedBy = rs.getString("Last_Updated_By");
+            int customerID = rs.getInt("Customer_ID");
+            int userID = rs.getInt("User_ID");
+            int contactID = rs.getInt("Contact_ID");
+            String contactName = rs.getString("Contact_Name");
 
             Appointment newAppt = new Appointment(
                     appointmentID, title, description, location, type, startDateTime, endDateTime, createdDate,
                     createdBy, lastUpdateDateTime, lastUpdatedBy, customerID, userID, contactID, contactName
             );
-            filteredAppts.add(newAppt);
+            filteredApptsList.add(newAppt);
         }
 
-        sqlCommand.close();
-        return filteredAppts;
+        ps.close();
+        return filteredApptsList;
 
     }
 
-    /**
-     * Gets all the Appointment ID and refreshes it in the database
-     *
-     * @param inputApptID Retains Appointment ID
-     * @param inputTitle Retains appointment title
-     * @param inputDescription Retains appointment description
-     * @param inputLocation Retains appointment location
-     * @param inputType Retains appointment Type
-     * @param inputStart Retains appointment Start Time
-     * @param inputEnd Retains appointment end Time
-     * @param inputLastUpdateBy Retains date/time of update of the appointment
-     * @param inputCustomerID Retains Customer ID
-     * @param inputUserID Retains User ID
-     * @param inputContactID Retains Contact ID
-     * @return Boolean displaying that the action was successful
-     * @throws SQLException
-     */
-    public static Boolean updateAppointment(Integer inputApptID, String inputTitle, String inputDescription,
-                                            String inputLocation, String inputType, ZonedDateTime inputStart,
-                                            ZonedDateTime inputEnd, String inputLastUpdateBy, Integer inputCustomerID,
-                                            Integer inputUserID, Integer inputContactID) throws SQLException {
 
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("UPDATE appointments "
+    public static Boolean updateAppointment(Integer inApptID, String inTitle, String inDescription,
+                                            String inLocation, String inType, ZonedDateTime inputStart,
+                                            ZonedDateTime inEnd, String inLastUpdateBy, Integer inCustomerID,
+                                            Integer inUserID, Integer inContactID) throws SQLException {
+
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("UPDATE appointments "
                 + "SET Title=?, Description=?, Location=?, Type=?, Start=?, End=?, Last_Update=?,Last_Updated_By=?, " +
                 "Customer_ID=?, User_ID=?, Contact_ID=? WHERE Appointment_ID = ?");
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String inputStartString = inputStart.format(formatter).toString();
-        String inputEndString = inputEnd.format(formatter).toString();
+        String inStartString = inputStart.format(formatter).toString();
+        String inEndString = inEnd.format(formatter).toString();
 
-        sqlCommand.setString(1,inputTitle);
-        sqlCommand.setString(2, inputDescription);
-        sqlCommand.setString(3, inputLocation);
-        sqlCommand.setString(4, inputType);
-        sqlCommand.setString(5, inputStartString);
-        sqlCommand.setString(6, inputEndString);
-        sqlCommand.setString(7, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
-        sqlCommand.setString(8, inputLastUpdateBy);
-        sqlCommand.setInt(9, inputCustomerID);
-        sqlCommand.setInt(10, inputUserID);
-        sqlCommand.setInt(11, inputContactID);
-        sqlCommand.setInt(12, inputApptID);
+        ps.setString(1,inTitle);
+        ps.setString(2, inDescription);
+        ps.setString(3, inLocation);
+        ps.setString(4, inType);
+        ps.setString(5, inStartString);
+        ps.setString(6, inEndString);
+        ps.setString(7, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(8, inLastUpdateBy);
+        ps.setInt(9, inCustomerID);
+        ps.setInt(10, inUserID);
+        ps.setInt(11, inContactID);
+        ps.setInt(12, inApptID);
 
         try {
-            sqlCommand.executeUpdate();
-            sqlCommand.close();
+            ps.executeUpdate();
+            ps.close();
             return true;
         }
-        catch (SQLException e) {
+        catch (SQLException throwables) {
             //TODO- log error
-            e.printStackTrace();
-            sqlCommand.close();
+            throwables.printStackTrace();
+            ps.close();
             return false;
         }
 
     }
 
-    /**
-     * Generates new appointment in the database with entered inputs
-     *
-     * @param inputTitle appointment title
-     * @param inputDescription appointment description
-     * @param inputLocation appointment location
-     * @param inputType appointment type
-     * @param inputStart appointment start time
-     * @param inputEnd appointment end time
-     * @param inputCreatedBy shows user who sets appointment
-     * @param inputLastUpdateBy shows who updated appointment last as the last person
-     * @param inputCustomerID customer ID
-     * @param inputUserID user ID
-     * @param inputContactID contact ID
-     * @return returns Boolean displaying a successfully action
-     * @throws SQLException
-     */
-    public static Boolean addAppointment(String inputTitle, String inputDescription,
-                                         String inputLocation, String inputType, ZonedDateTime inputStart,
-                                         ZonedDateTime inputEnd, String inputCreatedBy,
-                                         String inputLastUpdateBy, Integer inputCustomerID,
-                                         Integer inputUserID, Integer inputContactID) throws SQLException {
 
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("INSERT INTO appointments " +
+    public static Boolean addAppointment(String inTitle, String inDescription,
+                                         String inLocation, String inType, ZonedDateTime inStart,
+                                         ZonedDateTime inEnd, String inCreatedBy,
+                                         String inLastUpdateBy, Integer inCustomerID,
+                                         Integer inUserID, Integer inContactID) throws SQLException {
+
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("INSERT INTO appointments " +
                 "(Title, Description, Location, Type, Start, End, Create_date, \n" +
                 "Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID)\n" +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String inputStartString = inputStart.format(formatter).toString();
-        String inputEndString = inputEnd.format(formatter).toString();
+        String inputStartString = inStart.format(formatter).toString();
+        String inputEndString = inEnd.format(formatter).toString();
 
 
-        sqlCommand.setString(1, inputTitle);
-        sqlCommand.setString(2, inputDescription);
-        sqlCommand.setString(3, inputLocation);
-        sqlCommand.setString(4, inputType);
-        sqlCommand.setString(5, inputStartString);
-        sqlCommand.setString(6, inputEndString);
-        sqlCommand.setString(7, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
-        sqlCommand.setString(8, inputCreatedBy);
-        sqlCommand.setString(9, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
-        sqlCommand.setString(10, inputLastUpdateBy);
-        sqlCommand.setInt(11, inputCustomerID);
-        sqlCommand.setInt(12, inputUserID);
-        sqlCommand.setInt(13, inputContactID);
+        ps.setString(1, inTitle);
+        ps.setString(2, inDescription);
+        ps.setString(3, inLocation);
+        ps.setString(4, inType);
+        ps.setString(5, inputStartString);
+        ps.setString(6, inputEndString);
+        ps.setString(7, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(8, inCreatedBy);
+        ps.setString(9, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(10, inLastUpdateBy);
+        ps.setInt(11, inCustomerID);
+        ps.setInt(12, inUserID);
+        ps.setInt(13, inContactID);
 
 
         try {
-            sqlCommand.executeUpdate();
-            sqlCommand.close();
+            ps.executeUpdate();
+            ps.close();
             return true;
         }
-        catch (SQLException e) {
+        catch (SQLException throwables) {
             //TODO- log error
-            e.printStackTrace();
+            throwables.printStackTrace();
             return false;
         }
 
     }
 
-    /**
-     * Deletes appointments
-     *
-     * @param inputApptID Appointment ID that can be deleted
-     * @return returns Boolean displaying a successfully action
-     * @throws SQLException
-     */
-    public static Boolean deleteAppointment(Integer inputApptID) throws SQLException {
 
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("DELETE FROM appointments " +
+    public static Boolean removeAppointment(Integer inputApptID) throws SQLException {
+
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("DELETE FROM appointments " +
                 "WHERE Appointment_ID = ?");
 
-        sqlCommand.setInt(1, inputApptID);
+        ps.setInt(1, inputApptID);
 
         try {
-            sqlCommand.executeUpdate();
-            sqlCommand.close();
+            ps.executeUpdate();
+            ps.close();
             return true;
         }
-        catch (SQLException e) {
+        catch (SQLException throwables) {
             //TODO- log error
-            e.printStackTrace();
+            throwables.printStackTrace();
             return false;
         }
 
     }
 
-    /**
-     * Deletes all appointments from the a customer once this last is deleted from the database
-     *
-     * @param customerID Customer ID for deleting appointments
-     * @return returns Boolean displaying a successful action
-     * @throws SQLException
-     */
-    public static Boolean deleteCustomersAppointments(Integer customerID) throws SQLException {
 
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("DELETE FROM appointments " +
+    public static Boolean cancelCustomersAppointments(Integer customerID) throws SQLException {
+
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("DELETE FROM appointments " +
                 "WHERE Customer_ID = ?");
 
-        sqlCommand.setInt(1, customerID);
+        ps.setInt(1, customerID);
 
         try {
-            sqlCommand.executeUpdate();
-            sqlCommand.close();
+            ps.executeUpdate();
+            ps.close();
             return true;
         }
-        catch (SQLException e) {
+        catch (SQLException throwables) {
             //TODO- log error
-            e.printStackTrace();
+            throwables.printStackTrace();
             return false;
         }
 
     }
 
-    /**
-     * Gets all the appointments from the database
-     *
-     * @return returns an ObservableList of all appointments
-     * @throws SQLException
-     */
+
     public static ObservableList<Appointment> getAllAppointments() throws SQLException {
 
 
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("SELECT * FROM appointments as a\n" +
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("SELECT * FROM appointments as a\n" +
                 "LEFT OUTER JOIN contacts as c ON a.Contact_ID = c.Contact_ID;");
-        ResultSet results = sqlCommand.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
 
-        while( results.next() ) {
+        while( rs.next() ) {
 
-            Integer appointmentID = results.getInt("Appointment_ID");
-            String title = results.getString("Title");
-            String description = results.getString("Description");
-            String location = results.getString("Location");
-            String type = results.getString("Type");
-            Timestamp startDateTime = results.getTimestamp("Start");
-            Timestamp endDateTime = results.getTimestamp("End");
-            Timestamp createdDate = results.getTimestamp("Create_Date");
-            String createdBy = results.getString("Created_by");
-            Timestamp  lastUpdateDateTime = results.getTimestamp("Last_Update");
-            String lastUpdatedBy = results.getString("Last_Updated_By");
-            Integer customerID = results.getInt("Customer_ID");
-            Integer userID = results.getInt("User_ID");
-            Integer contactID = results.getInt("Contact_ID");
-            String contactName = results.getString("Contact_Name");
+            Integer appointmentID = rs.getInt("Appointment_ID");
+            String title = rs.getString("Title");
+            String description = rs.getString("Description");
+            String location = rs.getString("Location");
+            String type = rs.getString("Type");
+            Timestamp startDateTime = rs.getTimestamp("Start");
+            Timestamp endDateTime = rs.getTimestamp("End");
+            Timestamp createdDate = rs.getTimestamp("Create_Date");
+            String createdBy = rs.getString("Created_by");
+            Timestamp  lastUpdateDateTime = rs.getTimestamp("Last_Update");
+            String lastUpdatedBy = rs.getString("Last_Updated_By");
+            Integer customerID = rs.getInt("Customer_ID");
+            Integer userID = rs.getInt("User_ID");
+            Integer contactID = rs.getInt("Contact_ID");
+            String contactName = rs.getString("Contact_Name");
 
 
             Appointment newAppt = new Appointment(
@@ -387,63 +321,62 @@ public class AppointmentDB {
             allAppointments.add(newAppt);
 
         }
-        sqlCommand.close();
+        ps.close();
         return allAppointments;
 
     }
 
-    /**
-     * getAppointmentsIn15Mins
-     * Gets all appointment queries from the Database to find any existing appointment within the 15 min when signing in.
-     *
-     * @return retuns Observablelist all user's appointments starting in 15 mins.
-     * @throws SQLException
-     */
-    public static ObservableList<Appointment> getAppointmentsIn15Mins() throws SQLException {
+
+    public static ObservableList<Appointment> getCheckAppointmentsIn15Mins() throws SQLException {
 
         ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 
         LocalDateTime now = LocalDateTime.now();
-        ZonedDateTime userTZnow = now.atZone(LogonSession.getUserTimeZone());
+        ZonedDateTime userTZnow = now.atZone(LoginSession.getUserTimeZone());
         ZonedDateTime nowUTC = userTZnow.withZoneSameInstant(ZoneOffset.UTC);
         ZonedDateTime utcPlus15 = nowUTC.plusMinutes(15);
 
 
-        String rangeStart = nowUTC.format(formatter).toString();
-        String rangeEnd = utcPlus15.format(formatter).toString();
-        Integer logonUserID = LogonSession.getLoggedOnUser().getUserID();
+        String spanStart = nowUTC.format(formatter).toString();
+        String spanEnd = utcPlus15.format(formatter).toString();
+        Integer loginUserID = LoginSession.getLoginUser().getUserID();
 
 
-        PreparedStatement sqlCommand = DBConnection.dbCursor().prepareStatement("SELECT * FROM appointments as a " +
+        PreparedStatement ps = DBConnection.dbConn().prepareStatement("SELECT * FROM appointments as a " +
                 "LEFT OUTER JOIN contacts as c ON a.Contact_ID = c.Contact_ID WHERE " +
                 "Start BETWEEN ? AND ? AND User_ID = ? ");
 
-        sqlCommand.setString(1, rangeStart);
-        sqlCommand.setString(2, rangeEnd);
-        sqlCommand.setInt(3, logonUserID);
+        ps.setString(1, spanStart);
+        ps.setString(2, spanEnd);
+        ps.setInt(3, loginUserID);
 
-        ResultSet results = sqlCommand.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
-        while( results.next() ) {
+        while( rs.next() ) {
+            //if(rs.getTimestamp("Start").before(Timestamp.valueOf(LocalDateTime.now().plusMinutes(15))))
+            //                {
+            //                    Appointment CheckAppointmentsIn15Mins = new Appointment(rs.getInt("Appointment_ID"),
+            //                            rs.getDate("date(start)"), rs.getTime("time(start)"));
+            //                    apptCounter++;
+            //                    CheckAppointmentsIn15Mins.add(CheckAppointmentsIn15Mins)
 
-            Integer appointmentID = results.getInt("Appointment_ID");
-            String title = results.getString("Title");
-            String description = results.getString("Description");
-            String location = results.getString("Location");
-            String type = results.getString("Type");
-            Timestamp startDateTime = results.getTimestamp("Start");
-            Timestamp endDateTime = results.getTimestamp("End");
-            Timestamp createdDate = results.getTimestamp("Create_Date");
-            String createdBy = results.getString("Created_by");
-            Timestamp lastUpdateDateTime = results.getTimestamp("Last_Update");
-            String lastUpdatedBy = results.getString("Last_Updated_By");
-            Integer customerID = results.getInt("Customer_ID");
-            Integer userID = results.getInt("User_ID");
-            Integer contactID = results.getInt("Contact_ID");
-            String contactName = results.getString("Contact_Name");
+            Integer appointmentID = rs.getInt("Appointment_ID");
+            String title = rs.getString("Title");
+            String description = rs.getString("Description");
+            String location = rs.getString("Location");
+            String type = rs.getString("Type");
+            Timestamp startDateTime = rs.getTimestamp("Start");
+            Timestamp endDateTime = rs.getTimestamp("End");
+            Timestamp createdDate = rs.getTimestamp("Create_Date");
+            String createdBy = rs.getString("Created_by");
+            Timestamp lastUpdateDateTime = rs.getTimestamp("Last_Update");
+            String lastUpdatedBy = rs.getString("Last_Updated_By");
+            Integer customerID = rs.getInt("Customer_ID");
+            int userID = rs.getInt("User_ID");
+            int contactID = rs.getInt("Contact_ID");
+            String contactName = rs.getString("Contact_Name");
 
             Appointment newAppt = new Appointment(
                     appointmentID, title, description, location, type, startDateTime, endDateTime, createdDate,
