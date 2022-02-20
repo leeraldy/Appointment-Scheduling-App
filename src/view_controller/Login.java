@@ -29,24 +29,16 @@ import java.net.URL;
  * @author Hussein Coulibaly
  */
 public class Login implements Initializable {
-    @ FXML
-    private TextField passwordTextField;
-    @ FXML
-    private TextField userTextField;
-    @ FXML
-    private Label titleLabel;
-    @ FXML
-    private Label userNameLabel;
-    @ FXML
-    private Label passwordLabel;
-    @ FXML
-    private Button loginButton;
-    @ FXML
-    private Button clearButton;
-    @ FXML
-    private Button exitButton;
-    @ FXML
-    private Label zoneLabel;
+
+    @FXML private TextField passwordTextField;
+    @FXML private TextField userTextField;
+    @FXML private Label titleLabel;
+    @FXML private Label userNameLabel;
+    @FXML private Label passwordLabel;
+    @FXML private Button loginButton;
+    @FXML private Button clearButton;
+    @FXML private Button exitButton;
+    @FXML private Label zoneLabel;
 
 
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
@@ -61,14 +53,14 @@ public class Login implements Initializable {
     }
 
 
-    public void pressLogonButton(ActionEvent event) throws IOException, SQLException {
+    public void logonButtonHandler(ActionEvent event) throws IOException, SQLException {
         String userName = userTextField.getText();
         String password = passwordTextField.getText();
 
-        // Attempt Login
+
         boolean logon = LoginSession.accessAttempt(userName, password);
 
-        // Log Login attempt
+
         Logger.log(userName, logon);
 
         if (logon) {
@@ -114,30 +106,21 @@ public class Login implements Initializable {
 
     }
 
-    /**
-     * Clears any input when clicked
-     * @param event Button Pressed
-     * @throws IOException
-     */
-    public void pressClearButton(ActionEvent event) throws IOException {
+
+    public void clearButtonHandler(ActionEvent event) throws IOException {
         userTextField.clear();
         passwordTextField.clear();
 
     }
 
 
-    public void pressExitButton(ActionEvent event) throws IOException {
+    public void exitButtonHandler(ActionEvent event) throws IOException {
         LoginSession.SignOff();
         System.exit(0);
 
     }
 
-    /**
-     * Returns the user to the mainscreen
-     *
-     * @param location Time zone
-     * @param resources resources
-     */
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

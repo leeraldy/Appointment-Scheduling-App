@@ -10,24 +10,24 @@
     <children>
         <HBox layoutX="14.0" layoutY="335.0" prefHeight="50.0" prefWidth="477.0">
             <children>
-                <Button fx:id="ApptByReportButton" mnemonicParsing="false" onAction="#pressApptByReportButton" prefHeight="50.0" prefWidth="136.0" text="Customer Appointments by type and month " textOverrun="CLIP" wrapText="true">
+                <Button fx:id="ApptByReportButton" mnemonicParsing="false" onAction="#apptReviewButtonHandler" prefHeight="50.0" prefWidth="136.0" text="Customer Appointments by type and month " textOverrun="CLIP" wrapText="true">
                     <font>
                         <Font size="10.0" />
                     </font>
                 </Button>
-                <Button fx:id="contactScheduleReportButton" mnemonicParsing="false" onAction="#pressContactSchedule" prefHeight="50.0" prefWidth="136.0" text="Contact Schedule " textOverrun="CLIP" wrapText="true">
+                <Button fx:id="contactScheduleReportButton" mnemonicParsing="false" onAction="#contactScheduleHandler" prefHeight="50.0" prefWidth="136.0" text="Contact Schedule " textOverrun="CLIP" wrapText="true">
                     <font>
                         <Font size="10.0" />
                     </font>
                 </Button>
-                <Button fx:id="minsPerContactButton" mnemonicParsing="false" onAction="#pressMinsPerContact" prefHeight="50.0" prefWidth="136.0" text="Minutes scheduled per Contact " textOverrun="CLIP" wrapText="true">
+                <Button fx:id="minsPerContactButton" mnemonicParsing="false" onAction="#minsPerContactView" prefHeight="50.0" prefWidth="136.0" text="Minutes scheduled per Contact " textOverrun="CLIP" wrapText="true">
                     <font>
                         <Font size="10.0" />
                     </font>
                 </Button>
             </children>
         </HBox>
-        <Button fx:id="backButton" layoutX="514.0" layoutY="335.0" mnemonicParsing="false" onAction="#pressBackButton" prefHeight="26.0" prefWidth="71.0" text="Back" />
+        <Button fx:id="backButton" layoutX="514.0" layoutY="335.0" mnemonicParsing="false" onAction="#backButtonHandler" prefHeight="26.0" prefWidth="71.0" text="Back" />
         <TextArea fx:id="reportTextField" editable="false" layoutX="23.0" layoutY="31.0" prefHeight="288.0" prefWidth="468.0" wrapText="true" />
     </children>
 </AnchorPane>

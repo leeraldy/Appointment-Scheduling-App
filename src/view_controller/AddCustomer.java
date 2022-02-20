@@ -18,30 +18,20 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * AddCustomer Class: Handles customers addition.
+ * AddCustomer Class: Manages customers addition.
  * @author Hussein Coulibaly
  */
 public class AddCustomer implements Initializable {
-    @FXML
-    TextField customerIDTextField;
-    @FXML
-    ComboBox<String> countryComboBox;
-    @FXML
-    ComboBox<String> divisionComboBox;
-    @FXML
-    TextField customerNameTextField;
-    @FXML
-    TextField addressTextField;
-    @FXML
-    TextField postalCodeTextField;
-    @FXML
-    TextField phoneNumberTextField;
-    @FXML
-    Button saveButton;
-    @FXML
-    Button clearButton;
-    @FXML
-    Button backButton;
+    @FXML TextField customerIDTextField;
+    @FXML ComboBox<String> countryComboBox;
+    @FXML ComboBox<String> divisionComboBox;
+    @FXML TextField customerNameTextField;
+    @FXML TextField addressTextField;
+    @FXML TextField postalCodeTextField;
+    @FXML TextField phoneNumberTextField;
+    @FXML Button saveButton;
+    @FXML Button clearButton;
+    @FXML Button backButton;
 
 
 
@@ -54,8 +44,8 @@ public class AddCustomer implements Initializable {
     }
 
 
-    public void pressSaveButton(ActionEvent event) throws SQLException, IOException {
-        // INPUT VALIDATION - if no nulls found
+    public void saveButtonHandler(ActionEvent event) throws SQLException, IOException {
+
         String country = countryComboBox.getValue();
         String division = divisionComboBox.getValue();
         String name = customerNameTextField.getText();
@@ -74,29 +64,27 @@ public class AddCustomer implements Initializable {
 
         }
 
-        // Add new customer to Database
+        // Add new customer into the Database
         Boolean success = CustomerDB.addCustomer(country, division, name, address, postalCode, phone,
                 CustomerDB.obtainParticularDivisionID(division));
 
-        // Generates successfully added message, if no error found.
         if (success) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Customer added successfully!", clickOkay);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Customer added successfully!", clickOkay);
             alert.showAndWait();
-            pressClearButton(event);
+            clearButtonHandler(event);
             switchScreen(event, "/view_controller/CustomerScene.fxml");
         }
         else {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to add Customer", clickOkay);
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Unable to add Customer", clickOkay);
             alert.showAndWait();
-            return;
         }
 
     }
 
 
-    public void pressClearButton(ActionEvent event) {
+    public void clearButtonHandler(ActionEvent event) {
         countryComboBox.getItems().clear();
         divisionComboBox.getItems().clear();
         customerNameTextField.clear();
@@ -107,7 +95,7 @@ public class AddCustomer implements Initializable {
     }
 
 
-    public void pressBackButton(ActionEvent event) throws IOException {
+    public void backButtonHandler(ActionEvent event) throws IOException {
         switchScreen(event, "/view_controller/CustomerScene.fxml");
 
     }
@@ -121,8 +109,8 @@ public class AddCustomer implements Initializable {
             throwables.printStackTrace();
         }
 
-        //Lambda Expression - Listener for combo box change
-        countryComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+        //Lambda
+        countryComboBox.valueProperty().addListener((obs, oldiN, newVal) -> {
             if (newVal == null) {
                 divisionComboBox.getItems().clear();
                 divisionComboBox.setDisable(true);

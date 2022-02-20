@@ -1,6 +1,5 @@
 package model;
 
-import java.sql.Timestamp;
 
 /**
  * Customer Class: Manages Customer objects
@@ -9,62 +8,63 @@ import java.sql.Timestamp;
  */
 public class Customer {
 
-    private Integer ID;
-    private String name;
-    private String address;
-    private String postalCode;
-    private String phoneNumber;
-    private Integer divisionID;
-    private String division;
-    private String country;
+    private final Integer ID;
+    private final String name;
+    private final String country;
+    private final String address;
+    private final String postalCode;
+    private final Integer divisionID;
+    private final String division;
+    private final String phoneNumber;
+
 
 
     public Customer(Integer inCustomerID, String inName, String inAddress, String inPostalCode,
                     String inPhoneNumber, String inDivision, Integer inDivID, String inCountry) {
-        this.ID = inCustomerID;
-        this.name = inName;
-        this.address = inAddress;
-        this.postalCode = inPostalCode;
-        this.phoneNumber = inPhoneNumber;
-        this.division = inDivision;
-        this.divisionID = inDivID;
-        this.country = inCountry;
+        ID = inCustomerID;
+        name = inName;
+        address = inAddress;
+        postalCode = inPostalCode;
+        phoneNumber = inPhoneNumber;
+        division = inDivision;
+        divisionID = inDivID;
+        country = inCountry;
 
     }
 
 
     public Integer getCustomerID() {
-        return this.ID;
+        return ID;
     }
 
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
 
     public String getAddress() {
-        return this.address;
+        return address;
     }
 
 
     public String getPostalCode() {
-        return this.postalCode;
+        return postalCode;
     }
 
 
     public String getPhoneNumber() {
-        return this.phoneNumber;
+        return phoneNumber;
     }
 
 
     public String getDivision() {
-        return this.division;
+        return division;
     }
 
 
     public String getCountry() {
-        return this.country;
+        return country;
     }
 
 

@@ -9,21 +9,21 @@ import java.sql.Timestamp;
  */
 public class Appointment {
 
-    private Integer appointmentID;
-    private String title;
-    private String description;
-    private String location;
-    private String type;
-    private Timestamp startDateTime;
-    private Timestamp endDateTime;
-    private Timestamp createDate;
-    private String createBy;
-    private Timestamp lastUpdateDateTime;
-    private String lastUpdateBy;
-    private int customerID;
-    private int userID;
-    private int contactID;
-    private String contactName;
+    private final Integer appointmentID;
+    private final String title;
+    private final String description;
+    private final String location;
+    private final String type;
+    private final Timestamp startDateTime;
+    private final Timestamp endDateTime;
+    private final Timestamp createDate;
+    private final String createBy;
+    private final Timestamp lastUpdateDateTime;
+    private final String lastUpdateBy;
+    private final int customerID;
+    private final int userID;
+    private final int contactID;
+    private final String contactName;
 
 
     public Appointment(Integer inAppointmentID, String inTitle, String inDescription, String inLocation,
@@ -54,76 +54,76 @@ public class Appointment {
 
 
     public Integer getAppointmentID() {
-        return this.appointmentID;
+        return appointmentID;
     }
 
 
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
 
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
 
     public String getLocation() {
-        return this.location;
+        return location;
     }
 
 
     public String getType() {
-        return this.type;
+        return type;
     }
 
 
     public Timestamp getStartDateTime() {
-        return this.startDateTime;
+        return startDateTime;
     }
 
 
     public Timestamp getEndDateTime() {
-        return this.endDateTime;
+        return endDateTime;
     }
 
 
     public Timestamp getCreateDate() {
-        return this.createDate;
+        return createDate;
     }
 
 
     public String getCreateBy() {
-        return this.createBy;
+        return createBy;
     }
 
 
     public Timestamp getLastUpdateDateTime() {
-        return this.lastUpdateDateTime;
+        return lastUpdateDateTime;
     }
 
 
     public String getLastUpdateBy() {
-        return this.lastUpdateBy;
+        return lastUpdateBy;
     }
 
 
     public Integer getCustomerID() {
-        return this.customerID;
+        return customerID;
     }
 
 
     public Integer getUserID() {
-        return this.userID;
+        return userID;
     }
 
 
     public Integer getContactID() {
-        return this.contactID;
+        return contactID;
     }
 
 
     public String getContactName() {
-        return this.contactName;
+        return contactName;
     }
 }

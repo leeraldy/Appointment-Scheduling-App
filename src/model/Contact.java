@@ -15,8 +15,8 @@ public class Contact {
     }
 
     private Contact(Integer appointmentID, String contactName){
-        this.contactID = contactID;
-        this.contactName = contactName;
+        contactID = contactID;
+        contactName = contactName;
     }
 
     public Integer getContactID(){
