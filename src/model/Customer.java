@@ -1,6 +1,5 @@
 package model;
 
-import java.sql.Timestamp;
 
 /**
  * Customer Class: Manages Customer objects
@@ -9,14 +8,15 @@ import java.sql.Timestamp;
  */
 public class Customer {
 
-    private Integer ID;
-    private String name;
-    private String address;
-    private String postalCode;
-    private String phoneNumber;
-    private Integer divisionID;
-    private String division;
-    private String country;
+    private final Integer ID;
+    private final String name;
+    private final String country;
+    private final String address;
+    private final String postalCode;
+    private final Integer divisionID;
+    private final String division;
+    private final String phoneNumber;
+
 
 
     public Customer(Integer inCustomerID, String inName, String inAddress, String inPostalCode,

@@ -11,7 +11,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
- * ContactDB Class: Manages all the contact in Database
+ * ContactDB Class: Manages all the contact objects in Database
  *
  * @author Hussein Coulibaly
  */

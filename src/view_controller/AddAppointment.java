@@ -25,40 +25,26 @@ import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 
 /**
- * AddAppointment Class: Handles new appointment addition
+ * AddAppointment Class: Manages new appointment additions
  *
  * @author Hussein Coulibaly
  */
 public class AddAppointment implements Initializable {
 
-    @FXML
-    TextField titleTextField;
-    @FXML
-    TextArea descriptionTextField;
-    @FXML
-    TextField locationTextField;
-    @ FXML
-    ComboBox<String> contactComboBox;
-    @ FXML
-    TextField typeTextField;
-    @ FXML
-    ComboBox<Integer> customerComboBox;
-    @ FXML
-    ComboBox<Integer> userComboBox;
-    @ FXML
-    Label timeZoneTag;
-    @ FXML
-    DatePicker apptDatePicker;
-    @ FXML
-    TextField startTimeTextBox;
-    @ FXML
-    TextField endTimeTextBox;
-    @ FXML
-    Button saveButton;
-    @ FXML
-    Button clearButton;
-    @ FXML
-    Button backButton;
+    @FXML TextField titleTextField;
+    @FXML TextArea descriptionTextField;
+    @FXML TextField locationTextField;
+    @FXML ComboBox<String> contactComboBox;
+    @FXML TextField typeTextField;
+    @FXML ComboBox<Integer> customerComboBox;
+    @FXML ComboBox<Integer> userComboBox;
+    @FXML Label timeZoneTag;
+    @FXML DatePicker apptDatePicker;
+    @FXML TextField startTimeTextBox;
+    @FXML TextField endTimeTextBox;
+    @FXML Button saveButton;
+    @FXML Button clearButton;
+    @FXML Button backButton;
 
 
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
@@ -69,14 +55,12 @@ public class AddAppointment implements Initializable {
         window.show();
     }
 
-    /**
-     * Executes additional inputs in the database
-     */
-    public void pressSaveButton(ActionEvent event) throws SQLException, IOException {
+
+    public void saveButtonHandler(ActionEvent event) throws SQLException, IOException {
 
 
         Boolean validStartDateTime = true;
-        Boolean validEndDateTime = true;
+        Boolean validEndDateTime= true;
         Boolean validOverlap = true;
         Boolean validBusinessHours = true;
         String errorMessage = "";
@@ -92,8 +76,8 @@ public class AddAppointment implements Initializable {
         LocalDate apptDate = apptDatePicker.getValue();
         LocalDateTime endDateTime = null;
         LocalDateTime startDateTime = null;
-        ZonedDateTime zonedEndDateTime = null;
-        ZonedDateTime zonedStartDateTime = null;
+        ZonedDateTime zonedEndDateTime;
+        ZonedDateTime zonedStartDateTime;
 
         int contactID = ContactDB.obtainContactID(contactName);
 
@@ -106,7 +90,7 @@ public class AddAppointment implements Initializable {
         }
         catch(DateTimeParseException error) {
             validStartDateTime = false;
-            errorMessage += "Invalid Start time. Please ensure proper format HH:MM, including leading 0's.\n";
+            errorMessage += "Incorrect Appointment Start time. Please ensure proper format HH:MM is used.\n";
         }
 
         try {
@@ -116,40 +100,38 @@ public class AddAppointment implements Initializable {
         }
         catch(DateTimeParseException error) {
             validEndDateTime = false;
-            errorMessage += "Invalid End time. Please ensure proper format HH:MM, including leading 0's.\n";
+            errorMessage += "Incorrect Appointment End time. Please ensure proper format HH:MM is used.\n";
         }
 
-        // INPUT VALIDATION: Ensure all fields have been entered correctly
+
         if (title.isBlank() || description.isBlank() || location.isBlank() || contactName == null || type.isBlank() ||
                 customerID == null || userID == null || apptDate == null || endDateTime == null ||
                 startDateTime == null) {
 
-            errorMessage += "Please ensure a value has been entered in all fields.\n";
-            // Throws error if found
-            ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-            Alert invalidInput = new Alert(Alert.AlertType.WARNING, errorMessage, clickOkay);
-            invalidInput.showAndWait();
-            return;
+            errorMessage += "Please ensure all fields are completed.\n";
 
+            ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
+            Alert invalidIn = new Alert(Alert.AlertType.WARNING, errorMessage, clickOkay);
+            invalidIn.showAndWait();
+            return;
         }
 
         validBusinessHours = validateBusinessHours(startDateTime, endDateTime, apptDate);
-        validOverlap = validateCustomerOverlap(customerID, startDateTime, endDateTime, apptDate);
+        validOverlap = checkOverlappedCustomer(customerID, startDateTime, endDateTime, apptDate);
 
         if (!validBusinessHours) {
-            errorMessage += "You are not allowed to schedule an appointment out of business hours. It should be between 8am to 10pm EST\n";
+            errorMessage += "You are not allowed to schedule an appointment out of business hours.(8am to 10pm EST)\n";
         }
         if (!validOverlap) {
-            errorMessage += "Invalid, Customer Overlap. You cannot double book customers.\n";
+            errorMessage += "Incorrect, Overlapped customer. You customer cannot be duplicated.\n";
         }
 
         System.out.println(errorMessage); // TODO - logger
 
-        if (!validOverlap || !validBusinessHours || !validEndDateTime || !validStartDateTime) {
+        if (!validOverlap || !validBusinessHours || !validEndDateTime == false || !validStartDateTime == true) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-            Alert invalidInput = new Alert(Alert.AlertType.WARNING, errorMessage, clickOkay);
-            invalidInput.showAndWait();
-            return;
+            Alert invalidIn = new Alert(Alert.AlertType.WARNING, errorMessage, clickOkay);
+            invalidIn.showAndWait();
 
         }
         else {
@@ -162,11 +144,11 @@ public class AddAppointment implements Initializable {
             zonedStartDateTime = zonedStartDateTime.withZoneSameInstant(ZoneOffset.UTC);
             zonedEndDateTime = zonedEndDateTime.withZoneSameInstant(ZoneOffset.UTC);
 
-            // Add appointment to Database by completing all the fields
+
             Boolean success = AppointmentDB.addAppointment(title, description, location, type, zonedStartDateTime,
                     zonedEndDateTime, loggedOnUserName, loggedOnUserName, customerID, userID, contactID );
 
-            // return message "successfully added" if found no errors
+
             if (success) {
                 ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment added successfully!", clickOkay);
@@ -175,15 +157,16 @@ public class AddAppointment implements Initializable {
             }
             else {
                 ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-                Alert alert = new Alert(Alert.AlertType.WARNING, "failed to add appointment", clickOkay);
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Unable to add appointment", clickOkay);
                 alert.showAndWait();
+                return;
             }
 
         }
 
     }
 
-    public void pressClearButton() {
+    public void clearButtonHandler() {
         titleTextField.clear();
         descriptionTextField.clear();
         locationTextField.clear();
@@ -198,20 +181,14 @@ public class AddAppointment implements Initializable {
 
     }
 
-    /**
-     * Returns back to previous scene
-     *
-     * @param event button press
-     * @throws IOException
-     */
-    public void pressBackButton(ActionEvent event) throws IOException {
+
+    public void backButtonHandler(ActionEvent event) throws IOException {
         switchScreen(event, "/view_controller/AppointmentScene.fxml");
 
     }
 
 
     public Boolean validateBusinessHours(LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDate apptDate) {
-        // (8am to 10pm EST, Not including weekends)
 
         ZonedDateTime startZonedDateTime = ZonedDateTime.of(startDateTime, LoginSession.getUserTimeZone());
         ZonedDateTime endZonedDateTime = ZonedDateTime.of(endDateTime, LoginSession.getUserTimeZone());
@@ -236,13 +213,12 @@ public class AddAppointment implements Initializable {
     }
 
 
-    public Boolean validateCustomerOverlap(Integer inputCustomerID, LocalDateTime startDateTime,
+    public Boolean checkOverlappedCustomer(Integer inputCustomerID, LocalDateTime startDateTime,
                                            LocalDateTime endDateTime, LocalDate apptDate) throws SQLException {
 
-        // Get list of appointments that might have conflicts
+
         ObservableList<Appointment> possibleConflicts = AppointmentDB.getAppointmentsFilteredByCustomer(apptDate,
                 inputCustomerID);
-        // Removes any conflicting appointments with the existing one
 
         if (possibleConflicts.isEmpty()) {
             return true;
@@ -275,7 +251,7 @@ public class AddAppointment implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
 
-        timeZoneTag.setText("Your Time Zone:" + LoginSession.getUserTimeZone());
+        timeZoneTag.setText("Your Time Zone is:" + LoginSession.getUserTimeZone());
 
         //Lambda Expression
 
@@ -295,7 +271,6 @@ public class AddAppointment implements Initializable {
             }
         });
 
-        // Populate ComboBoxes
         try {
             customerComboBox.setItems(CustomerDB.getAllCustomerID());
             userComboBox.setItems(UserDB.getAllUserID());

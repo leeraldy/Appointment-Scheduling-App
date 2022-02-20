@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
  */
 public class AppointmentDB {
 
-    // Pulls all the appointments from the database
+    // Pulls all the appointments in the database
 
     public static ObservableList<Appointment> getAllDateFilteredAppointmentsView(ZonedDateTime startSpan, ZonedDateTime endSpan)
             throws SQLException {
@@ -27,7 +27,7 @@ public class AppointmentDB {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         PreparedStatement ps = DBConnection.dbConn().prepareStatement(
-                //"SELECT * FROM Appointmemnts WHERE Contact_ID BETWEEN" + "start in ? and ?"
+                //"SELECT * FROM appointmemnts WHERE Contact_ID BETWEEN" + "start in ? and ?"
                 "SELECT * FROM appointments as a LEFT OUTER JOIN contacts as c ON a.Contact_ID = c.Contact_ID WHERE" +
                         " Start between ? AND ?"
         );
@@ -165,8 +165,8 @@ public class AppointmentDB {
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String inStartString = inputStart.format(formatter).toString();
-        String inEndString = inEnd.format(formatter).toString();
+        String inStartString = inputStart.format(formatter);
+        String inEndString = inEnd.format(formatter);
 
         ps.setString(1,inTitle);
         ps.setString(2, inDescription);
@@ -174,7 +174,7 @@ public class AppointmentDB {
         ps.setString(4, inType);
         ps.setString(5, inStartString);
         ps.setString(6, inEndString);
-        ps.setString(7, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(7, ZonedDateTime.now(ZoneOffset.UTC).format(formatter));
         ps.setString(8, inLastUpdateBy);
         ps.setInt(9, inCustomerID);
         ps.setInt(10, inUserID);
@@ -209,8 +209,8 @@ public class AppointmentDB {
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String inputStartString = inStart.format(formatter).toString();
-        String inputEndString = inEnd.format(formatter).toString();
+        String inputStartString = inStart.format(formatter);
+        String inputEndString = inEnd.format(formatter);
 
 
         ps.setString(1, inTitle);
@@ -219,9 +219,9 @@ public class AppointmentDB {
         ps.setString(4, inType);
         ps.setString(5, inputStartString);
         ps.setString(6, inputEndString);
-        ps.setString(7, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(7, ZonedDateTime.now(ZoneOffset.UTC).format(formatter));
         ps.setString(8, inCreatedBy);
-        ps.setString(9, ZonedDateTime.now(ZoneOffset.UTC).format(formatter).toString());
+        ps.setString(9, ZonedDateTime.now(ZoneOffset.UTC).format(formatter));
         ps.setString(10, inLastUpdateBy);
         ps.setInt(11, inCustomerID);
         ps.setInt(12, inUserID);
@@ -339,8 +339,8 @@ public class AppointmentDB {
         ZonedDateTime utcPlus15 = nowUTC.plusMinutes(15);
 
 
-        String spanStart = nowUTC.format(formatter).toString();
-        String spanEnd = utcPlus15.format(formatter).toString();
+        String spanStart = nowUTC.format(formatter);
+        String spanEnd = utcPlus15.format(formatter);
         Integer loginUserID = LoginSession.getLoginUser().getUserID();
 
 

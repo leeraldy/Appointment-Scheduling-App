@@ -21,7 +21,6 @@ public class LoginSession {
 
     public LoginSession() {}
 
-    private static final TimeZone gtmTimeZone = TimeZone.getTimeZone("GMT+0");
 
 
     public static boolean accessAttempt(String userNameIn, String userPassword) throws SQLException{

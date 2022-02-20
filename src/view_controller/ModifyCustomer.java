@@ -21,50 +21,35 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 /**
- * ModifyCustomer Class: Handles the changes of the current customer
+ * ModifyCustomer Class: Manages the changes of the current customer
  * @author Hussein Coulibaly
  */
 public class ModifyCustomer implements Initializable {
 
-    @FXML
-    TextField customerIDTextBox;
-    @FXML
-    ComboBox<String> countryComboBox;
-    @FXML
-    ComboBox<String> divisionComboBox;
-    @FXML
-    TextField nameTextBox;
-    @FXML
-    TextField addressTextBox;
-    @FXML
-    TextField postalCodeTextBox;
-    @FXML
-    TextField phoneTextBox;
-    @FXML
-    Button saveButton;
-    @FXML
-    Button clearButton;
-    @FXML
-    Button backButton;
+    @FXML TextField customerIDTextField;
+    @FXML ComboBox<String> countryComboBox;
+    @FXML ComboBox<String> divisionComboBox;
+    @FXML TextField nameTextField;
+    @FXML TextField addressTextField;
+    @FXML TextField postalCodeTextField;
+    @FXML TextField phoneTextField;
+    @FXML Button saveButton;
+    @FXML Button clearButton;
+    @FXML Button backButton;
 
-    /**
-     * Set initiates modify scene
-     *
-     * @param selectedCustomer Customer object from previous scene
-     * @throws SQLException
-     */
-    public void initData(Customer selectedCustomer) throws SQLException {
+
+    public void MetaData(Customer selectedCustomer) throws SQLException {
 
         countryComboBox.setItems(CustomerDB.getAllCountriesList());
         countryComboBox.getSelectionModel().select(selectedCustomer.getCountry());
         divisionComboBox.setItems(CustomerDB.getFilteredDivisionsView(selectedCustomer.getCountry()));
         divisionComboBox.getSelectionModel().select(selectedCustomer.getDivision());
 
-        customerIDTextBox.setText(selectedCustomer.getCustomerID().toString());
-        nameTextBox.setText(selectedCustomer.getName());
-        addressTextBox.setText(selectedCustomer.getAddress());
-        postalCodeTextBox.setText(selectedCustomer.getPostalCode());
-        phoneTextBox.setText(selectedCustomer.getPhoneNumber());
+        customerIDTextField.setText(selectedCustomer.getCustomerID().toString());
+        nameTextField.setText(selectedCustomer.getName());
+        addressTextField.setText(selectedCustomer.getAddress());
+        postalCodeTextField.setText(selectedCustomer.getPostalCode());
+        phoneTextField.setText(selectedCustomer.getPhoneNumber());
 
 
     }
@@ -79,15 +64,15 @@ public class ModifyCustomer implements Initializable {
     }
 
 
-    public void pressSaveButton(ActionEvent event) throws IOException, SQLException {
-        // INPUT VALIDATION
+    public void saveButtonHandler(ActionEvent event) throws IOException, SQLException {
+
         String country = countryComboBox.getValue();
         String division = divisionComboBox.getValue();
-        String name = nameTextBox.getText();
-        String address = addressTextBox.getText();
-        String postalCode = postalCodeTextBox.getText();
-        String phone = phoneTextBox.getText();
-        Integer customerID = Integer.parseInt(customerIDTextBox.getText());
+        String name = nameTextField.getText();
+        String address = addressTextField.getText();
+        String postalCode = postalCodeTextField.getText();
+        String phone = phoneTextField.getText();
+        Integer customerID = Integer.parseInt(customerIDTextField.getText());
 
         if (country.isBlank() || division.isBlank() || name.isBlank() || address.isBlank() || postalCode.isBlank() ||
                 phone.isBlank()) {
@@ -96,11 +81,9 @@ public class ModifyCustomer implements Initializable {
             Alert emptyVal = new Alert(Alert.AlertType.WARNING, "Please ensure all fields are completed.",
                     clickOkay);
             emptyVal.showAndWait();
-            return;
 
         }
 
-        // Updates customers in Database
         Boolean success = CustomerDB.updateCustomer(division, name, address, postalCode, phone, customerID);
 
         if (success) {
@@ -111,27 +94,23 @@ public class ModifyCustomer implements Initializable {
         }
         else {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-            Alert invalidInput = new Alert(Alert.AlertType.WARNING, "failed to Update appointment", clickOkay);
+            Alert invalidInput = new Alert(Alert.AlertType.WARNING, "Unable to Update appointment", clickOkay);
             invalidInput.showAndWait();
         }
     }
 
-    /**
-     * clears fields on screen
-     *
-     * @param event Button Press
-     */
-    public void pressClearButton(ActionEvent event) {
+
+    public void clearButtonHandler(ActionEvent event) {
         countryComboBox.getSelectionModel().clearSelection();
         divisionComboBox.getSelectionModel().clearSelection();
-        nameTextBox.clear();
-        addressTextBox.clear();
-        postalCodeTextBox.clear();
-        phoneTextBox.clear();
+        nameTextField.clear();
+        addressTextField.clear();
+        postalCodeTextField.clear();
+        phoneTextField.clear();
     }
 
 
-    public void pressBackButton(ActionEvent event) throws IOException {
+    public void backButtonHandler(ActionEvent event) throws IOException {
         switchScreen(event, "/view_controller/CustomerScene.fxml");
     }
 

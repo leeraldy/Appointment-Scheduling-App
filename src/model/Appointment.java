@@ -9,21 +9,21 @@ import java.sql.Timestamp;
  */
 public class Appointment {
 
-    private Integer appointmentID;
-    private String title;
-    private String description;
-    private String location;
-    private String type;
-    private Timestamp startDateTime;
-    private Timestamp endDateTime;
-    private Timestamp createDate;
-    private String createBy;
-    private Timestamp lastUpdateDateTime;
-    private String lastUpdateBy;
-    private int customerID;
-    private int userID;
-    private int contactID;
-    private String contactName;
+    private final Integer appointmentID;
+    private final String title;
+    private final String description;
+    private final String location;
+    private final String type;
+    private final Timestamp startDateTime;
+    private final Timestamp endDateTime;
+    private final Timestamp createDate;
+    private final String createBy;
+    private final Timestamp lastUpdateDateTime;
+    private final String lastUpdateBy;
+    private final int customerID;
+    private final int userID;
+    private final int contactID;
+    private final String contactName;
 
 
     public Appointment(Integer inAppointmentID, String inTitle, String inDescription, String inLocation,

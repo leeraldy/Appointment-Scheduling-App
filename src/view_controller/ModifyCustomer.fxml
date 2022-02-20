@@ -15,7 +15,7 @@
                 <HBox prefHeight="38.0" prefWidth="284.0">
                     <children>
                         <Label prefHeight="17.0" prefWidth="71.0" text="Customer ID:" />
-                        <TextField fx:id="customerIDTextBox" disable="true" editable="false" prefHeight="25.0" prefWidth="197.0" />
+                        <TextField fx:id="customerIDTextField" disable="true" editable="false" prefHeight="25.0" prefWidth="197.0" />
                     </children>
                 </HBox>
                 <HBox prefHeight="38.0" prefWidth="284.0">
@@ -33,34 +33,34 @@
                 <HBox prefHeight="38.0" prefWidth="284.0">
                     <children>
                         <Label prefHeight="17.0" prefWidth="71.0" text="Name:" />
-                        <TextField fx:id="nameTextBox" prefHeight="25.0" prefWidth="197.0" />
+                        <TextField fx:id="nameTextField" prefHeight="25.0" prefWidth="197.0" />
                     </children>
                 </HBox>
                 <HBox prefHeight="38.0" prefWidth="284.0">
                     <children>
                         <Label prefHeight="17.0" prefWidth="71.0" text="Address:" />
-                        <TextField fx:id="addressTextBox" prefHeight="25.0" prefWidth="197.0" />
+                        <TextField fx:id="addressTextField" prefHeight="25.0" prefWidth="197.0" />
                     </children>
                 </HBox>
                 <HBox prefHeight="38.0" prefWidth="284.0">
                     <children>
                         <Label prefHeight="17.0" prefWidth="71.0" text="Postal Code:" />
-                        <TextField fx:id="postalCodeTextBox" prefHeight="25.0" prefWidth="197.0" />
+                        <TextField fx:id="postalCodeTextField" prefHeight="25.0" prefWidth="197.0" />
                     </children>
                 </HBox>
                 <HBox prefHeight="38.0" prefWidth="284.0">
                     <children>
                         <Label prefHeight="17.0" prefWidth="71.0" text="Phone:" />
-                        <TextField fx:id="phoneTextBox" prefHeight="25.0" prefWidth="197.0" />
+                        <TextField fx:id="phoneTextField" prefHeight="25.0" prefWidth="197.0" />
                     </children>
                 </HBox>
             </children>
         </VBox>
         <HBox alignment="CENTER" layoutX="14.0" layoutY="288.0" prefHeight="46.0" prefWidth="318.0" spacing="20.0">
             <children>
-                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#pressSaveButton" prefHeight="25.0" prefWidth="70.0" text="Save " />
-                <Button fx:id="clearButton" mnemonicParsing="false" onAction="#pressClearButton" prefHeight="25.0" prefWidth="70.0" text="Clear" />
-                <Button fx:id="backButton" mnemonicParsing="false" onAction="#pressBackButton" prefHeight="25.0" prefWidth="70.0" text="Back" />
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveButtonHandler" prefHeight="25.0" prefWidth="70.0" text="Save " />
+                <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearButtonHandler" prefHeight="25.0" prefWidth="70.0" text="Clear" />
+                <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonHandler" prefHeight="25.0" prefWidth="70.0" text="Back" />
             </children>
         </HBox>
     </children>

@@ -1,6 +1,6 @@
 package view_controller;
 
-import javafx.collections.FXCollections;
+
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -28,59 +28,37 @@ import java.util.ResourceBundle;
 /**
  * * @author Hussein Coulibaly
  *
- * AppointmentScene Class: Handles the main screen and other screens objects
+ * AppointmentScene Class: Manages the main screen and other screens objects
  */
 public class AppointmentScene implements Initializable {
-    @FXML
-    Button newAppointmentButton;
-    @FXML
-    Button editAppointmentButton;
-    @FXML
-    Button deleteButton;
-    @FXML
-    Button customersViewButton;
-    @FXML
-    Button reportsButton;
-    @FXML
-    Button logOutButton;
-    @FXML
-    Button nextTimeButton;
-    @FXML
-    Button previousTimeButton;
-    @FXML
-    RadioButton monthFilterButton;
-    @FXML
-    RadioButton weekFilterButton;
-    @FXML
-    RadioButton noFilterButton;
-    @FXML
-    TableView<Appointment> appointmentTable;
-    @FXML
-    TableColumn<Appointment, Integer> appointmentIdColumn;
-    @FXML
-    TableColumn<Appointment, String> titleColumn;
-    @FXML
-    TableColumn<Appointment, String> descriptionColumn;
-    @FXML
-    TableColumn<Appointment, String> locationColumn;
-    @FXML
-    TableColumn<Appointment, String> contactColumn;
-    @FXML
-    TableColumn<Appointment, String> typeColumn;
-    @FXML
-    TableColumn<Appointment, ZonedDateTime> startDateTimeColumn;
-    @FXML
-    TableColumn<Appointment, ZonedDateTime> endDateTimeColumn;
-    @FXML
-    TableColumn<Appointment, Integer> customerIdColumn;
-    @FXML
-    ToggleGroup filterToggle;
-    @FXML
-    Label selectedTimeLabel;
 
-    // Set date filter.
-    ZonedDateTime startRangeMarker;
-    ZonedDateTime endRangeMarker;
+    @FXML Button newAppointmentButton;
+    @FXML Button editAppointmentButton;
+    @FXML Button deleteButton;
+    @FXML Button customersViewButton;
+    @FXML Button reportsButton;
+    @FXML Button logOutButton;
+    @FXML Button nextTimeButton;
+    @FXML Button previousTimeButton;
+    @FXML RadioButton monthFilterButton;
+    @FXML RadioButton weekFilterButton;
+    @FXML RadioButton noFilterButton;
+    @FXML TableView<Appointment> appointmentTable;
+    @FXML TableColumn<Appointment, Integer> appointmentIdColumn;
+    @FXML TableColumn<Appointment, String> titleColumn;
+    @FXML TableColumn<Appointment, String> descriptionColumn;
+    @FXML TableColumn<Appointment, String> locationColumn;
+    @FXML TableColumn<Appointment, String> contactColumn;
+    @FXML TableColumn<Appointment, String> typeColumn;
+    @FXML TableColumn<Appointment, ZonedDateTime> startDateTimeColumn;
+    @FXML TableColumn<Appointment, ZonedDateTime> endDateTimeColumn;
+    @FXML TableColumn<Appointment, Integer> customerIdColumn;
+    @FXML ToggleGroup filterToggleView;
+    @FXML Label selectedTimeLabel;
+
+
+    ZonedDateTime startSpanToken;
+    ZonedDateTime endSpanToken;
 
 
     public void switchScreen(ActionEvent event, String switchPath) throws IOException {
@@ -91,25 +69,19 @@ public class AppointmentScene implements Initializable {
         window.show();
     }
 
-    /**
-     * Generates new toggle group blocking multiple selections
-     */
+
     public void initToggleGroup() {
 
-        filterToggle = new ToggleGroup();
+        filterToggleView = new ToggleGroup();
 
-        noFilterButton.setToggleGroup(filterToggle);
-        weekFilterButton.setToggleGroup(filterToggle);
-        monthFilterButton.setToggleGroup(filterToggle);
+        noFilterButton.setToggleGroup(filterToggleView);
+        weekFilterButton.setToggleGroup(filterToggleView);
+        monthFilterButton.setToggleGroup(filterToggleView);
 
     }
 
-    /**
-     * Generates the list of all appointments on screen
-     *
-     * @param event Button Press
-     */
-    public void pressNoFilterButton(ActionEvent event) {
+
+    public void noFilterButtonHandler(ActionEvent event) {
         monthFilterButton.setSelected(false);
         weekFilterButton.setSelected(false);
 
@@ -118,11 +90,12 @@ public class AppointmentScene implements Initializable {
             allAppts = AppointmentDB.getAllAppointments();
         }
         catch (SQLException error){
-            // Database reconnection if the network drops.
+
             error.printStackTrace();
             DBConnection.connectDB();
             try {
                 allAppts = AppointmentDB.getAllAppointments();
+
             } catch (SQLException anotherError) {
                 anotherError.printStackTrace();
                 ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
@@ -132,39 +105,34 @@ public class AppointmentScene implements Initializable {
             }
 
         }
-        populateAppointments(allAppts);
+        populateAppointmentsView(allAppts);
         selectedTimeLabel.setText("All Appointments");
-        startRangeMarker = null;
+        startSpanToken = null;
 
 
     }
 
-    /**
-     * Generates a list of all appointments to by weekly
-     *
-     * @param event Button Press
-     * @throws SQLException
-     */
-    public void pressWeekFilterButton(ActionEvent event) throws SQLException {
+
+    public void weekFilterButtonHandler(ActionEvent event) throws SQLException {
 
         monthFilterButton.setSelected(false);
         noFilterButton.setSelected(false);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        ObservableList<Appointment> filteredAppts = FXCollections.observableArrayList();
-        startRangeMarker = ZonedDateTime.now(LoginSession.getUserTimeZone());
-        endRangeMarker = startRangeMarker.plusWeeks(1);
+        ObservableList<Appointment> filteredAppts;
+        startSpanToken = ZonedDateTime.now(LoginSession.getUserTimeZone());
+        endSpanToken = startSpanToken.plusWeeks(1);
 
-        // Convert to UTC
-        ZonedDateTime startRange = startRangeMarker.withZoneSameInstant(ZoneOffset.UTC);
-        ZonedDateTime endRange = endRangeMarker.withZoneSameInstant(ZoneOffset.UTC);
+        // UTC Time conversion
+        ZonedDateTime startSpan = startSpanToken.withZoneSameInstant(ZoneOffset.UTC);
+        ZonedDateTime endSpan = endSpanToken.withZoneSameInstant(ZoneOffset.UTC);
 
-        // Search in Database for time frame
-        filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startRange, endRange);
-        // Populate filtered appointments
-        populateAppointments(filteredAppts);
 
-        selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
+        filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startSpan, endSpan);
+
+        populateAppointmentsView(filteredAppts);
+
+        selectedTimeLabel.setText(startSpanToken.format(formatter) + " - " + endSpanToken.format(formatter) + " " +
                 LoginSession.getUserTimeZone());
 
 
@@ -173,158 +141,142 @@ public class AppointmentScene implements Initializable {
 
     }
 
-    /**
-     * Generates a list of all appointments to by month
-     *
-     * @param event Button Press
-     * @throws SQLException
-     */
-    public void pressMonthFilterButton(ActionEvent event) throws SQLException {
+
+    public void monthFilterButtonHandler(ActionEvent event) throws SQLException {
         weekFilterButton.setSelected(false);
         noFilterButton.setSelected(false);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        ObservableList<Appointment> filteredAppts = FXCollections.observableArrayList();
-        startRangeMarker = ZonedDateTime.now(LoginSession.getUserTimeZone());
-        endRangeMarker = startRangeMarker.plusMonths(1);
+        ObservableList<Appointment> filteredAppts;
+        startSpanToken = ZonedDateTime.now(LoginSession.getUserTimeZone());
+        endSpanToken = startSpanToken.plusMonths(1);
 
-        // Convert to UTC
-        ZonedDateTime startRange = startRangeMarker.withZoneSameInstant(ZoneOffset.UTC);
-        ZonedDateTime endRange = endRangeMarker.withZoneSameInstant(ZoneOffset.UTC);
+        // UTC time conversion
+        ZonedDateTime startSpan = startSpanToken.withZoneSameInstant(ZoneOffset.UTC);
+        ZonedDateTime endSpan = endSpanToken.withZoneSameInstant(ZoneOffset.UTC);
 
-        filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startRange, endRange);
-        // Populate filtered appointments
-        populateAppointments(filteredAppts);
-        // update label
-        selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
+        filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startSpan, endSpan);
+
+        populateAppointmentsView(filteredAppts);
+        selectedTimeLabel.setText(startSpanToken.format(formatter) + " - " + endSpanToken.format(formatter) + " " +
                 LoginSession.getUserTimeZone());
 
 
 
     }
 
-    /**
-     * Generates a list of filtered appointments
-     *
-     * @param event Button Click
-     * @throws SQLException
-     */
-    public void pressNextButton(ActionEvent event) throws SQLException {
+
+    public void nextButtonHandler(ActionEvent event) throws SQLException {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        ObservableList<Appointment> filteredAppts = FXCollections.observableArrayList();
+        ObservableList<Appointment> filteredAppts;
 
-        if (filterToggle.getSelectedToggle() == weekFilterButton) {
+        if (filterToggleView.getSelectedToggle() == weekFilterButton) {
 
-            ZonedDateTime startRange = startRangeMarker.plusWeeks(1);
-            ZonedDateTime endRange = endRangeMarker.plusWeeks(1);
+            ZonedDateTime startSpan = startSpanToken.plusWeeks(1);
+            ZonedDateTime endSpan = endSpanToken.plusWeeks(1);
 
-            // update markers
-            startRangeMarker = startRange;
-            endRangeMarker = endRange;
 
-            // convert to UTC for the DB
-            startRange = startRange.withZoneSameInstant(ZoneOffset.UTC);
-            endRange = endRange.withZoneSameInstant(ZoneOffset.UTC);
+            startSpanToken = startSpan;
+            endSpanToken = endSpan;
 
-            filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startRange, endRange);
 
-            populateAppointments(filteredAppts);
+            startSpan = startSpan.withZoneSameInstant(ZoneOffset.UTC);
+            endSpan = endSpan.withZoneSameInstant(ZoneOffset.UTC);
 
-            // update label
-            selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
+            filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startSpan, endSpan);
+
+            populateAppointmentsView(filteredAppts);
+
+
+            selectedTimeLabel.setText(startSpanToken.format(formatter) + " - " + endSpanToken.format(formatter) + " " +
                     LoginSession.getUserTimeZone());
 
         }
-        if (filterToggle.getSelectedToggle() == monthFilterButton) {
+        if (filterToggleView.getSelectedToggle() == monthFilterButton) {
 
-            ZonedDateTime startRange = startRangeMarker.plusMonths(1);
-            ZonedDateTime endRange = endRangeMarker.plusMonths(1);
+            ZonedDateTime startSpan = startSpanToken.plusMonths(1);
+            ZonedDateTime endSpan = endSpanToken.plusMonths(1);
 
-            startRangeMarker = startRange;
-            endRangeMarker = endRange;
+            startSpanToken = startSpan;
+            endSpanToken = endSpan;
 
-            // convert to time UTC for the Databae
-            startRange = startRange.withZoneSameInstant(ZoneOffset.UTC);
-            endRange = endRange.withZoneSameInstant(ZoneOffset.UTC);
+            startSpan = startSpan.withZoneSameInstant(ZoneOffset.UTC);
+            endSpan = endSpan.withZoneSameInstant(ZoneOffset.UTC);
 
-            filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startRange, endRange);
+            filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startSpan, endSpan);
 
-            populateAppointments(filteredAppts);
+            populateAppointmentsView(filteredAppts);
 
-            selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
+            selectedTimeLabel.setText(startSpanToken.format(formatter) + " - " + endSpanToken.format(formatter) + " " +
                     LoginSession.getUserTimeZone());
 
         }
 
     }
 
-    /**
-     * @param event Button Press
-     * @throws SQLException
-     */
-    public void pressBackButton(ActionEvent event) throws SQLException {
+
+    public void backButtonHandler(ActionEvent event) throws SQLException {
 
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        ObservableList<Appointment> filteredAppts = FXCollections.observableArrayList();
+        ObservableList<Appointment> filteredAppts;
 
-        if (filterToggle.getSelectedToggle() == weekFilterButton) {
+        if (filterToggleView.getSelectedToggle() == weekFilterButton) {
 
-            ZonedDateTime startRange = startRangeMarker.minusWeeks(1);
-            ZonedDateTime endRange = endRangeMarker.minusWeeks(1);
+            ZonedDateTime startSpan = startSpanToken.minusWeeks(1);
+            ZonedDateTime endSpan = endSpanToken.minusWeeks(1);
 
-            startRangeMarker = startRange;
-            endRangeMarker = endRange;
+            startSpanToken = startSpan;
+            endSpanToken = endSpan;
 
-            // convert time to UTC
-            startRange = startRange.withZoneSameInstant(ZoneOffset.UTC);
-            endRange = endRange.withZoneSameInstant(ZoneOffset.UTC);
+            //  UTC Time Conversion
+            startSpan = startSpan.withZoneSameInstant(ZoneOffset.UTC);
+            endSpan = endSpan.withZoneSameInstant(ZoneOffset.UTC);
 
-            filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startRange, endRange);
+            filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startSpan, endSpan);
 
-            populateAppointments(filteredAppts);
+            populateAppointmentsView(filteredAppts);
 
-            selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
+            selectedTimeLabel.setText(startSpanToken.format(formatter) + " - " + endSpanToken.format(formatter) + " " +
                     LoginSession.getUserTimeZone());
 
         }
-        if (filterToggle.getSelectedToggle() == monthFilterButton) {
+        if (filterToggleView.getSelectedToggle() == monthFilterButton) {
 
-            ZonedDateTime startRange = startRangeMarker.minusMonths(1);
-            ZonedDateTime endRange = endRangeMarker.minusMonths(1);
+            ZonedDateTime startSpan = startSpanToken.minusMonths(1);
+            ZonedDateTime endSpan = endSpanToken.minusMonths(1);
 
-            startRangeMarker = startRange;
-            endRangeMarker = endRange;
+            startSpanToken = startSpan;
+            endSpanToken = endSpan;
 
-            // convert to time UTC
-            startRange = startRange.withZoneSameInstant(ZoneOffset.UTC);
-            endRange = endRange.withZoneSameInstant(ZoneOffset.UTC);
 
-            filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startRange, endRange);
+            startSpan = startSpan.withZoneSameInstant(ZoneOffset.UTC);
+            endSpan = endSpan.withZoneSameInstant(ZoneOffset.UTC);
 
-            populateAppointments(filteredAppts);
+            filteredAppts = AppointmentDB.getAllDateFilteredAppointmentsView(startSpan, endSpan);
 
-            selectedTimeLabel.setText(startRangeMarker.format(formatter) + " - " + endRangeMarker.format(formatter) + " " +
+            populateAppointmentsView(filteredAppts);
+
+            selectedTimeLabel.setText(startSpanToken.format(formatter) + " - " + endSpanToken.format(formatter) + " " +
                     LoginSession.getUserTimeZone());
         }
 
     }
 
-    // Deletes existing appointment and returns appointments table
-    public void pressDeleteButton(ActionEvent event) throws IOException, SQLException {
+    // Deletes existing appointments
+    public void deleteButtonHandler(ActionEvent event) throws IOException, SQLException {
 
         Appointment selectedAppt = appointmentTable.getSelectionModel().getSelectedItem();
 
         if (selectedAppt == null) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-            Alert invalidInput = new Alert(Alert.AlertType.WARNING, "No selected Appointment", clickOkay);
-            invalidInput.showAndWait();
-            return;
+            Alert invalidIn = new Alert(Alert.AlertType.WARNING, "No Appointment is selected", clickOkay);
+            invalidIn.showAndWait();
         }
         else {
-            // show alert and ensure user wants to delete
+
             ButtonType clickYes = ButtonType.YES;
             ButtonType clickNo = ButtonType.NO;
             Alert deleteAlert = new Alert(Alert.AlertType.WARNING, "Are you sure you want to delete Appointment: "
@@ -344,14 +296,14 @@ public class AppointmentScene implements Initializable {
                 else {
 
                     ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-                    Alert deleteAppt = new Alert(Alert.AlertType.WARNING, "Failed to delete Appointment", clickOkay);
+                    Alert deleteAppt = new Alert(Alert.AlertType.WARNING, "Unable to delete Appointment", clickOkay);
                     deleteAppt.showAndWait();
 
                 }
 
-                // Returns appointment screen
+
                 try {
-                    populateAppointments(AppointmentDB.getAllAppointments());
+                    populateAppointmentsView(AppointmentDB.getAllAppointments());
                 }
                 catch (SQLException error){
                     //TODO - log error
@@ -365,27 +317,16 @@ public class AppointmentScene implements Initializable {
         }
     }
 
-    /**
-     * Redirects add screen appointment
-     *
-     * @param event Button Click
-     * @throws IOException
-     */
-    public void pressNewButton(ActionEvent event) throws IOException {
+    public void newButtonHandler(ActionEvent event) throws IOException {
         switchScreen(event, "/view_controller/AddAppointment.fxml");
 
     }
 
-    /**
-     * Exits user out from the program
-     *
-     * @param event Button Press
-     * @throws IOException
-     */
-    public void pressLogoutButton(ActionEvent event) throws IOException {
+
+    public void logoutButtonHandler(ActionEvent event) throws IOException {
         ButtonType clickYes = ButtonType.YES;
         ButtonType clickNo = ButtonType.NO;
-        Alert logOff = new Alert(Alert.AlertType.WARNING, "Are you sure you want to Log Off?", clickYes, clickNo);
+        Alert logOff = new Alert(Alert.AlertType.WARNING, "Are you sure you want to Sign Off?", clickYes, clickNo);
         Optional<ButtonType> result = logOff.showAndWait();
 
         if (result.get() == ButtonType.YES) {
@@ -399,22 +340,15 @@ public class AppointmentScene implements Initializable {
 
     }
 
-    /**
-     * Redirects to another screen
-     *
-     * @param event Button Click
-     * @throws IOException
-     * @throws SQLException
-     */
-    public void pressEditButton(ActionEvent event) throws IOException, SQLException {
+
+    public void editButtonHandler(ActionEvent event) throws IOException, SQLException {
 
         Appointment selectedAppt = appointmentTable.getSelectionModel().getSelectedItem();
-        // If no selection made, shows errors
+
         if (selectedAppt == null) {
             ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-            Alert invalidInput = new Alert(Alert.AlertType.WARNING, "No selected Appointment", clickOkay);
+            Alert invalidInput = new Alert(Alert.AlertType.WARNING, "No Appointment is selected", clickOkay);
             invalidInput.showAndWait();
-            return;
 
         }
 
@@ -424,57 +358,43 @@ public class AppointmentScene implements Initializable {
         Scene scene = new Scene(parent);
 
         ModifyAppointment controller = loader.getController();
-        controller.initData(selectedAppt);
+        controller.MetaData(selectedAppt);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(scene);
 
     }
 
-    // Generates customer screen
+    // Returns Customer Screen
 
-    public void pressCustomerButton(ActionEvent event) throws IOException {
+    public void customerButtonHandler(ActionEvent event) throws IOException {
 
         switchScreen(event, "/view_controller/CustomerScene.fxml");
 
     }
 
-    /**
-     * Generates reports screen
-     *
-     * @param event Button Press
-     * @throws IOException
-     */
-    public void pressReportsPage(ActionEvent event) throws IOException {
+    public void reportHandler(ActionEvent event) throws IOException {
         switchScreen(event, "/view_controller/Reports.fxml");
 
     }
 
-    /**
-     * Populates appointments on the screen
-     *
-     * @param inputList appointments list
-     */
-    public void populateAppointments(ObservableList<Appointment> inputList) {
 
-        appointmentIdColumn.setCellValueFactory(new PropertyValueFactory<Appointment, Integer>("appointmentID"));
-        titleColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("title"));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("description"));
-        locationColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("location"));
-        typeColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("type"));
-        contactColumn.setCellValueFactory(new PropertyValueFactory<Appointment, String>("contactName"));
-        startDateTimeColumn.setCellValueFactory(new PropertyValueFactory<Appointment, ZonedDateTime>("startDateTime"));
-        endDateTimeColumn.setCellValueFactory(new PropertyValueFactory<Appointment, ZonedDateTime>("endDateTime"));
-        customerIdColumn.setCellValueFactory(new PropertyValueFactory<Appointment, Integer>("customerID"));
+    public void populateAppointmentsView(ObservableList<Appointment> inputList) {
+
+        appointmentIdColumn.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        contactColumn.setCellValueFactory(new PropertyValueFactory<>("contactName"));
+        startDateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startDateTime"));
+        endDateTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endDateTime"));
+        customerIdColumn.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         appointmentTable.setItems(inputList);
 
     }
 
-    /**
-     * Displays any cancelled appointmemt
-     *
-     * @param inputList list of all appointments
-     */
-    public void checkCanceled(ObservableList<Appointment> inputList) {
+
+    public void auditCanceledAppointment(ObservableList<Appointment> inputList) {
 
         inputList.forEach((appt) -> {
             if (appt.getType().equalsIgnoreCase("canceled")) {
@@ -488,12 +408,6 @@ public class AppointmentScene implements Initializable {
     }
 
 
-    /**
-     * Initiates mainscreen
-     *
-     * @param location location / time zone
-     * @param resources resources
-     */
     @Override
     public void initialize(URL location, ResourceBundle resources)   {
 
@@ -507,7 +421,7 @@ public class AppointmentScene implements Initializable {
             allAppts = AppointmentDB.getAllAppointments();
         }
         catch (SQLException error){
-            // Database reconnection if connection is lost
+
             error.printStackTrace();
             DBConnection.connectDB();
             try {
@@ -515,14 +429,13 @@ public class AppointmentScene implements Initializable {
             } catch (SQLException anotherError) {
                 anotherError.printStackTrace();
                 ButtonType clickOkay = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-                Alert invalidInput = new Alert(Alert.AlertType.WARNING, "DB connection failed. please restart", clickOkay);
-                invalidInput.showAndWait();
-                return;
+                Alert invalidIn = new Alert(Alert.AlertType.WARNING, "Database connection failed. Please try to restart", clickOkay);
+                invalidIn.showAndWait();
             }
 
         }
-        populateAppointments(allAppts);
-        checkCanceled(allAppts);
+        populateAppointmentsView(allAppts);
+        auditCanceledAppointment(allAppts);
 
 
     }
