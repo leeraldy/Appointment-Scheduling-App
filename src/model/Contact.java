@@ -11,7 +11,7 @@ public class Contact {
     private String contactName;
 
     public Contact(String contactName) {
-        this.contactName = contactName;
+        contactName = contactName;
     }
 
     private Contact(Integer appointmentID, String contactName){
@@ -20,11 +20,11 @@ public class Contact {
     }
 
     public Integer getContactID(){
-        return this.contactID;
+        return contactID;
     }
 
     public String getContactName(){
-        return this.contactName;
+        return contactName;
     }
 }
 
