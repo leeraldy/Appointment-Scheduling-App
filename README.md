@@ -8,8 +8,7 @@ To accommodate french speaking users who are many based in some parts of Canada,
 The application allows users only to schedule appointment within the business hours 8am to 10 pm and from Monday to Friday.
 
 Author: Hussein Coulibaly
-Email: hcouli1@wgu.edu
-Student ID: 001688586
+Email: leeraldy@gmail.com
 Student Application Version: 1.0
 Submission date: 1.27.2021
 IDE Version: IntelliJ IDEA 2021.1.2
