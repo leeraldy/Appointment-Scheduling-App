@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxWidth="1000.0" prefHeight="447.0" prefWidth="809.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CustomerViewer">
+    <children>
+        <Button layoutX="24.0" layoutY="380.0" mnemonicParsing="false" onAction="#addButtonHandler" prefHeight="19.0" prefWidth="76.0" text="New" />
+        <Label layoutX="24.0" layoutY="21.0" text="Customers Viewer">
+            <font>
+                <Font name="Cambria Bold" size="24.0" />
+            </font>
+        </Label>
+        <Button layoutX="675.0" layoutY="380.0" mnemonicParsing="false" onAction="#backButtonHandler" prefHeight="27.0" prefWidth="95.0" text="Return">
+            <font>
+                <Font size="13.0" />
+            </font>
+        </Button>
+        <TableView fx:id="customerTable" layoutX="10.0" layoutY="81.0" prefHeight="287.0" prefWidth="778.0">
+            <columns>
+                <TableColumn fx:id="customerIDColumn" minWidth="82.0" prefWidth="88.0" text="Customer ID" />
+                <TableColumn fx:id="customerNameColumn" prefWidth="130.0" text="Customer Name" />
+                <TableColumn fx:id="divisionColumn" prefWidth="118.0" text="Division" />
+                <TableColumn fx:id="addressColumn" prefWidth="193.0" text="Address" />
+                <TableColumn fx:id="postalCodeColumn" prefWidth="105.0" text="Postal_Code" />
+                <TableColumn fx:id="phoneNumberColumn" prefWidth="143.0" text="Phone Number" />
+            </columns>
+        </TableView>
+        <Button layoutX="212.0" layoutY="379.0" mnemonicParsing="false" onAction="#deleteButtonHandler" prefHeight="19.0" prefWidth="76.0" text="Delete" />
+        <Button layoutX="117.0" layoutY="379.0" mnemonicParsing="false" onAction="#editButtonHandler" prefHeight="25.0" prefWidth="76.0" text="Edit" />
+    </children>
+</AnchorPane>

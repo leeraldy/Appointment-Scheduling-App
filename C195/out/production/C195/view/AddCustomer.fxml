@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="445.0" prefWidth="385.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddCustomer">
+    <children>
+        <Label layoutX="85.0" layoutY="20.0" prefWidth="240.0" text="Add Customer">
+            <font>
+                <Font name="Cambria Bold" size="30.0" />
+            </font>
+        </Label>
+        <VBox layoutX="180.0" layoutY="97.0" prefHeight="255.0" prefWidth="152.0" spacing="12.0">
+            <children>
+                <TextField fx:id="customerIDTextField" disable="true" text="AUTO GENERATED" />
+                <TextField fx:id="customerNameTextField" prefHeight="21.0" prefWidth="150.0" />
+                <ComboBox fx:id="countryComboBox" onAction="#divisionViewer" prefWidth="150.0" promptText="Select country" />
+                <ComboBox fx:id="divisionComboBox" prefWidth="150.0" promptText="Select country first..." />
+                <TextField fx:id="addressTextField" />
+                <TextField fx:id="postalCodeTextField" />
+                <TextField fx:id="phoneNumberTextField" prefHeight="14.0" prefWidth="150.0" />
+            </children>
+        </VBox>
+        <VBox layoutX="60.0" layoutY="100.0" prefHeight="255.0" prefWidth="120.0" spacing="12.0">
+            <children>
+                <Label prefHeight="24.0" prefWidth="106.0" text="Customer ID:">
+               <font>
+                  <Font size="13.0" />
+               </font>
+                </Label>
+                <Label prefHeight="30.0" prefWidth="102.0" text="Customer Name:">
+               <font>
+                  <Font size="13.0" />
+               </font>
+                </Label>
+                <Label prefHeight="25.0" prefWidth="101.0" text="Country:">
+               <font>
+                  <Font size="13.0" />
+               </font>
+                </Label>
+                <Label fx:id="divisionSwitchLabel" prefHeight="25.0" prefWidth="102.0" text="Division:">
+               <font>
+                  <Font size="13.0" />
+               </font>
+                </Label>
+                <Label prefHeight="24.0" prefWidth="101.0" text="Address:">
+               <font>
+                  <Font size="13.0" />
+               </font>
+                </Label>
+                <Label prefHeight="25.0" prefWidth="104.0" text="Postal Code:">
+               <font>
+                  <Font size="13.0" />
+               </font>
+                </Label>
+                <Label prefHeight="25.0" prefWidth="104.0" text="Phone Number:">
+               <font>
+                  <Font size="13.0" />
+               </font>
+                </Label>
+            </children>
+        </VBox>
+        <Button layoutX="205.0" layoutY="376.0" mnemonicParsing="false" onAction="#cancelButtonHandler" prefHeight="23.0" prefWidth="80.0" text="Cancel">
+            <font>
+                <Font size="13.0" />
+            </font>
+        </Button>
+        <Button layoutX="113.0" layoutY="376.0" mnemonicParsing="false" onAction="#saveButtonHandler" prefHeight="25.0" prefWidth="80.0" text="Save">
+            <font>
+                <Font size="13.0" />
+            </font>
+        </Button>
+    </children>
+</AnchorPane>
